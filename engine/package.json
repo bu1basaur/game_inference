@@ -30,6 +30,7 @@
         "@esotericsoftware/spine-phaser": "^4.1.55",
         "@esotericsoftware/spine-phaser-v3": "^4.2.96",
         "phaser": "^3.90.0",
+        "phaser3-rex-plugins": "^1.80.18",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "zustand": "^5.0.9"

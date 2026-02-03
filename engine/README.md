@@ -56,6 +56,52 @@ We have provided a default project structure to get you started. This is as foll
 | `public/style.css`     | Some simple CSS rules to help with page layout.                                                     |
 | `public/assets`        | Contains the static assets used by the game.                                                        |
 
+## Scene Flow
+
+Boot
+
+-   게임 최초 진입 씬
+-   게임 기본 설정 및 MainMenu에 필요한 최소 리소스 로드
+
+MainMenu
+
+-   게임 시작 / 옵션 / 크레딧 제공
+-   게임 시작 시 Preloader 호출
+
+Preloader
+
+-   실제 게임 진행에 필요한 리소스 로드
+-   dialogues, item 데이터 및 게임 전용 에셋 처리
+-   로드 완료 후 Game Scene 진입
+
+Game
+
+-   실제 게임이 실행되는 씬
+
+Ending
+
+-   엔딩이 실행되는 씬
+
+## Template Project Structure (Custom)
+
+📂 src/data/
+
+All files inside data/ are pure JSON data only
+(no logic, no side effects).
+
+dialogues.json | 상희 | All in-game dialogues and conversation data
+item.json | 수연 | Item definitions, properties, and descriptions
+ending.json | 공용 | Ending branches and condition data
+
+## Event System
+
+📂 src/events/
+
+EventBus.ts | Global event hub
+GameEvt.ts | Game state & logic events
+SoundEvt.ts | Audio control events
+UIEvt.ts | UI-related events
+
 ## React Bridge
 
 The `PhaserGame.tsx` component is the bridge between React and Phaser. It initializes the Phaser game and passes events between the two.

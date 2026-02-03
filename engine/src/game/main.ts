@@ -1,6 +1,6 @@
 import { SpinePlugin } from "@esotericsoftware/spine-phaser-v3";
 import { Boot } from "./scenes/load/Boot";
-import { GameOver } from "./scenes/GameOver";
+import { Ending } from "./scenes/Ending";
 import { Game as MainGame } from "./scenes/Game";
 import { MainMenu } from "./scenes/MainMenu";
 import { AUTO, Game } from "phaser";
@@ -13,7 +13,7 @@ const config: Phaser.Types.Core.GameConfig = {
     width: 1920,
     height: 1080,
     parent: "game-container",
-    backgroundColor: "#028af8",
+    backgroundColor: "#444444",
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -27,7 +27,7 @@ const config: Phaser.Types.Core.GameConfig = {
             },
         ],
     },
-    scene: [Boot, Preloader, MainMenu, MainGame, GameOver],
+    scene: [Boot, Preloader, MainMenu, MainGame, Ending],
 };
 
 const StartGame = (parent: string) => {

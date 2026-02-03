@@ -1,14 +1,14 @@
-import { EventBus } from "../events/EventBus";
+import { EventBus } from "../../events/EventBus";
 import { Scene } from "phaser";
-import { GAME_EVT } from "../events/GameEvent";
+import { GAME_EVT } from "../../events/GameEvt";
 
-export class GameOver extends Scene {
+export class Ending extends Scene {
     camera: Phaser.Cameras.Scene2D.Camera;
     background: Phaser.GameObjects.Image;
     gameOverText: Phaser.GameObjects.Text;
 
     constructor() {
-        super("GameOver");
+        super("Ending");
     }
 
     create() {

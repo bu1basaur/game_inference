@@ -117,6 +117,7 @@ function App() {
                     fontSize: "2rem",
                     fontWeight: "bold",
                     pointerEvents: "none",
+                    zIndex: "10",
                 }}
             >
                 SCORE: {score}
@@ -126,7 +127,13 @@ function App() {
             <PhaserGame />
 
             {/* 하단 컨트롤러 - React가 담당 */}
-            <div style={{ marginTop: "-100px" }}>
+            <div
+                style={{
+                    position: "relative",
+                    marginTop: "-100px",
+                    zIndex: "10",
+                }}
+            >
                 <button onClick={() => resetScore()}>점수 초기화</button>
             </div>
         </div>

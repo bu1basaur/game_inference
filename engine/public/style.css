@@ -87,6 +87,7 @@ body {
     font-size: 4.5rem;
     font-weight: bold;
     letter-spacing: 0.2em;
+    text-indent: 0.2em;
     color: rgba(255, 255, 255, 0.87);
     text-shadow: 0 0 20px rgba(14, 195, 201, 0.6);
 }

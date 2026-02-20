@@ -1,68 +1,35 @@
-import { forwardRef, useEffect, useLayoutEffect, useRef } from "react";
-import StartGame from "./game/main";
+import { useLayoutEffect, useRef, useEffect } from "react";
 import { EventBus } from "./events/EventBus";
 import { GAME_EVT } from "./events/GameEvt";
+import StartGame from "./game/main";
+import { useGameStore } from "./stores/useGameStore";
 
-export interface IRefPhaserGame {
-    game: Phaser.Game | null;
-    scene: Phaser.Scene | null;
-}
+export const PhaserGame = () => {
+    const game = useRef<Phaser.Game | null>(null);
 
-interface IProps {
-    currentActiveScene?: (scene_instance: Phaser.Scene) => void;
-}
+    useLayoutEffect(() => {
+        if (game.current === null) {
+            game.current = StartGame("game-container");
+        }
 
-export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
-    function PhaserGame({ currentActiveScene }, ref) {
-        const game = useRef<Phaser.Game | null>(null!);
+        return () => {
+            game.current?.destroy(true);
+            game.current = null;
+        };
+    }, []);
 
-        useLayoutEffect(() => {
-            if (game.current === null) {
-                game.current = StartGame("game-container");
+    const setPaused = useGameStore((s) => s.setPaused);
 
-                if (typeof ref === "function") {
-                    ref({ game: game.current, scene: null });
-                } else if (ref) {
-                    ref.current = { game: game.current, scene: null };
-                }
-            }
+    // ESC 키 입력 시 게임 일시정지 & 재개
+    useEffect(() => {
+        EventBus.on(GAME_EVT.PAUSE, () => setPaused(true));
+        EventBus.on(GAME_EVT.RESUMED, () => setPaused(false));
 
-            return () => {
-                if (game.current) {
-                    game.current.destroy(true);
-                    if (game.current !== null) {
-                        game.current = null;
-                    }
-                }
-            };
-        }, [ref]);
+        return () => {
+            EventBus.off(GAME_EVT.PAUSE);
+            EventBus.off(GAME_EVT.RESUMED);
+        };
+    }, []);
 
-        useEffect(() => {
-            EventBus.on(
-                GAME_EVT.SCENE_READY,
-                (scene_instance: Phaser.Scene) => {
-                    if (
-                        currentActiveScene &&
-                        typeof currentActiveScene === "function"
-                    ) {
-                        currentActiveScene(scene_instance);
-                    }
-
-                    if (typeof ref === "function") {
-                        ref({ game: game.current, scene: scene_instance });
-                    } else if (ref) {
-                        ref.current = {
-                            game: game.current,
-                            scene: scene_instance,
-                        };
-                    }
-                }
-            );
-            return () => {
-                EventBus.removeListener(GAME_EVT.SCENE_READY);
-            };
-        }, [currentActiveScene, ref]);
-
-        return <div id="game-container"></div>;
-    }
-);
+    return <div id="game-container" />;
+};

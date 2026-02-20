@@ -1,141 +1,26 @@
-import { useRef, useState } from "react";
-import { IRefPhaserGame, PhaserGame } from "./PhaserGame";
-import { MainMenu } from "./game/scenes/MainMenu";
+import { EventBus } from "./events/EventBus";
+import { GAME_EVT } from "./events/GameEvt";
+import { PhaserGame } from "./PhaserGame";
 import { useGameStore } from "./stores/useGameStore";
 
 function App() {
-    const score = useGameStore((state) => state.score);
-    const resetScore = useGameStore((state) => state.resetScore);
-    // The sprite can only be moved in the MainMenu Scene
-    const [canMoveSprite, setCanMoveSprite] = useState(true);
+    const isPaused = useGameStore((s) => s.isPaused);
 
-    //  References to the PhaserGame component (game and scene are exposed)
-    const phaserRef = useRef<IRefPhaserGame | null>(null);
-    const [spritePosition, setSpritePosition] = useState({ x: 0, y: 0 });
-
-    const changeScene = () => {
-        if (phaserRef.current) {
-            const scene = phaserRef.current.scene as MainMenu;
-
-            if (scene) {
-                scene.changeScene();
-            }
-        }
-    };
-
-    const moveSprite = () => {
-        if (phaserRef.current) {
-            const scene = phaserRef.current.scene as MainMenu;
-
-            if (scene && scene.scene.key === "MainMenu") {
-                // Get the update logo position
-                scene.moveLogo(({ x, y }) => {
-                    setSpritePosition({ x, y });
-                });
-            }
-        }
-    };
-
-    const addSprite = () => {
-        if (phaserRef.current) {
-            const scene = phaserRef.current.scene;
-
-            if (scene) {
-                // Add more stars
-                const x = Phaser.Math.Between(64, scene.scale.width - 64);
-                const y = Phaser.Math.Between(64, scene.scale.height - 64);
-
-                //  `add.sprite` is a Phaser GameObjectFactory method and it returns a Sprite Game Object instance
-                const star = scene.add.sprite(x, y, "star");
-
-                //  ... which you can then act upon. Here we create a Phaser Tween to fade the star sprite in and out.
-                //  You could, of course, do this from within the Phaser Scene code, but this is just an example
-                //  showing that Phaser objects and systems can be acted upon from outside of Phaser itself.
-                scene.add.tween({
-                    targets: star,
-                    duration: 500 + Math.random() * 1000,
-                    alpha: 0,
-                    yoyo: true,
-                    repeat: -1,
-                });
-            }
-        }
-    };
-
-    // Event emitted from the PhaserGame component
-    const currentScene = (scene: Phaser.Scene) => {
-        setCanMoveSprite(scene.scene.key !== "MainMenu");
+    const handleResume = () => {
+        EventBus.emit(GAME_EVT.RESUME);
     };
 
     return (
-        // <div id="app">
-        //     <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
-        //     <div>
-        //         <div>
-        //             <button className="button" onClick={changeScene}>
-        //                 Change Scene
-        //             </button>
-        //         </div>
-        //         <div>
-        //             <button
-        //                 disabled={canMoveSprite}
-        //                 className="button"
-        //                 onClick={moveSprite}
-        //             >
-        //                 Toggle Movement
-        //             </button>
-        //         </div>
-        //         <div className="spritePosition">
-        //             Sprite Position:
-        //             <pre>{`{\n  x: ${spritePosition.x}\n  y: ${spritePosition.y}\n}`}</pre>
-        //         </div>
-        //         <div>
-        //             <button className="button" onClick={addSprite}>
-        //                 Add New Sprite
-        //             </button>
-        //         </div>
-        //     </div>
-        // </div>
-
-        <div
-            style={{
-                position: "relative",
-                textAlign: "center",
-                width: "100%",
-                height: "100vh",
-                minHeight: "100vh",
-            }}
-        >
-            {/* HUD (Heads-Up Display) - React가 담당 */}
-            <div
-                style={{
-                    position: "absolute",
-                    top: 20,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    color: "white",
-                    fontSize: "2rem",
-                    fontWeight: "bold",
-                    pointerEvents: "none",
-                    zIndex: "10",
-                }}
-            >
-                SCORE: {score}
-            </div>
-
-            {/* 게임 화면 */}
+        <div style={{ position: "relative", width: "100%", height: "100vh" }}>
             <PhaserGame />
-
-            {/* 하단 컨트롤러 - React가 담당 */}
-            <div
-                style={{
-                    position: "relative",
-                    marginTop: "-100px",
-                    zIndex: "10",
-                }}
-            >
-                <button onClick={() => resetScore()}>점수 초기화</button>
-            </div>
+            {isPaused && (
+                <div className="pause-overlay">
+                    <span className="pause-title">PAUSED</span>
+                    <button className="pause-resume-btn" onClick={handleResume}>
+                        다시 시작
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

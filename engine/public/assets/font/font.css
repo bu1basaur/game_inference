@@ -4,3 +4,45 @@
     src: url("Hakgyoansim_BoardmarkerOTFR.woff2") format("woff2");
     font-display: swap;
 }
+
+@font-face {
+    font-family: "Kkokkoma";
+    font-style: normal;
+    src: url("TTHakgyoansimKkokkomaR.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Dotbogi";
+    font-style: normal;
+    src: url("TTHakgyoansimDotbogiR.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Bunpil";
+    font-style: normal;
+    src: url("HakgyoansimBunpilR.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Jayeon";
+    font-style: normal;
+    src: url("HakgyoansimJayeonR.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "ByeolbichhaneulB";
+    font-style: normal;
+    src: url("HakgyoansimByeolbichhaneulTTF-B.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "ByeolbichhaneulL";
+    font-style: normal;
+    src: url("HakgyoansimByeolbichhaneulTTF-L.woff2") format("woff2");
+    font-display: swap;
+}

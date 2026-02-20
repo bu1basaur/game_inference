@@ -67,3 +67,41 @@ body {
         color: rgba(255, 255, 255, 0.3);
     }
 }
+
+/* Pause Overlay */
+.pause-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    backdrop-filter: blur(8px);
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+.pause-title {
+    font-family: "Bunpil";
+    font-size: 4.5rem;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.87);
+    text-shadow: 0 0 20px rgba(14, 195, 201, 0.6);
+}
+
+.pause-resume-btn {
+    padding: 10px;
+    color: rgba(255, 255, 255, 0.87);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: "Bunpil", Arial, Helvetica, sans-serif;
+    font-size: 3rem;
+
+    &:hover {
+        color: #0ec3c9;
+    }
+}

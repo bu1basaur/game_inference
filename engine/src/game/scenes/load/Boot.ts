@@ -9,16 +9,22 @@ export class Boot extends Scene {
     preload() {
         this.load.image("background", "assets/bg.png");
 
+        this.loadAssets();
+
         // 간단한 프로그레스 바
-        this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
-        const bar = this.add.rectangle(512 - 230, 384, 4, 28, 0xffffff);
+        const centerX = this.scale.width / 2;
+        const centerY = this.scale.height / 2;
+
+        this.add
+            .rectangle(centerX, centerY, 468, 32)
+            .setStrokeStyle(1, 0xffffff);
+        const bar = this.add.rectangle(centerX - 230, centerY, 4, 28, 0xffffff);
         this.load.on("progress", (progress: number) => {
             bar.width = 4 + 460 * progress;
         });
     }
 
     async create() {
-        this.loadAssets();
         await this.loadFont();
         this.sceneStart();
     }
@@ -28,12 +34,22 @@ export class Boot extends Scene {
 
     /** 폰트 로드 */
     private async loadFont() {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = "/assets/font/font.css";
-        document.head.appendChild(link);
+        await new Promise<void>((resolve) => {
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = "/assets/font/font.css";
+            link.onload = () => resolve();
+            document.head.appendChild(link);
+        });
 
         await document.fonts.load('24px "Boardmarker"');
+        await document.fonts.load('24px "Bunpil"');
+        await document.fonts.load('24px "ByeolbichhaneulL"');
+        await document.fonts.load('24px "ByeolbichhaneulB"');
+        await document.fonts.load('24px "Dotbogi"');
+        await document.fonts.load('24px "Jayeon"');
+        await document.fonts.load('24px "Kkokkoma"');
+        console.log("폰트 로드 완료");
     }
 
     /** 씬 시작 */

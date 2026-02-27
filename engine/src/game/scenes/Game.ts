@@ -27,6 +27,7 @@ export class Game extends Scene {
     }
 
     create() {
+        this.add.image(960, 540, "bg");
         this.test();
 
         // ESC 키 등록
@@ -48,7 +49,7 @@ export class Game extends Scene {
         // 테스트용 Spine 애니메이션 추가
         const spineObject = this.add.spine(
             -200,
-            -300,
+            -100,
             "nyangi",
             "nyangi-atlas"
         );

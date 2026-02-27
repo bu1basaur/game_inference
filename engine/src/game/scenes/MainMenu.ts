@@ -27,7 +27,7 @@ export class MainMenu extends Scene {
         console.log("타이틀 생성");
         // 타이틀
         this.add
-            .text(700, 320, "오만거때만거", {
+            .text(700, 400, "이름 뭐하지", {
                 fontFamily: "Kkokkoma",
                 fontSize: "120px",
                 color: "#ffffff",

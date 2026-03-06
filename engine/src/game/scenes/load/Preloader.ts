@@ -1,5 +1,5 @@
 import { SceneX } from "../../../core/SceneX";
-import { COMMON_ASSETS } from "../../constants/Assets";
+import { COMMON_ASSETS, GAME_ASSETS } from "../../constants/Assets";
 
 export class Preloader extends SceneX {
     constructor() {
@@ -8,27 +8,10 @@ export class Preloader extends SceneX {
 
     preload() {
         this.loadAssets(COMMON_ASSETS);
-        // this.loadAudios();
-        // this.loadSpines();
-        // this.loadImages();
-        // this.loadVideos();
+        this.loadAssets(GAME_ASSETS);
     }
 
     create() {
         this.scene.start("Game");
     }
-
-    // /** 사운드 로드 */
-    // public loadAudios(): void {}
-
-    // /** 스파인 로드 */
-    // public loadSpines(): void {}
-
-    // /** 이미지 로드 */
-    // public loadImages(): void {
-    //     this.load.image("bg", "assets/common");
-    // }
-
-    // /** 비디오 로드 */
-    // public loadVideos(): void {}
 }

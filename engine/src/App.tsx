@@ -17,7 +17,7 @@ function App() {
                 <div className="pause-overlay">
                     <span className="pause-title">PAUSED</span>
                     <button className="pause-resume-btn" onClick={handleResume}>
-                        다시 시작
+                        게임으로 돌아가기
                     </button>
                 </div>
             )}

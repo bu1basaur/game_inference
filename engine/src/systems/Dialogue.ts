@@ -75,11 +75,16 @@ export class Dialogue {
         });
 
         if (skippable) {
-            this.scene.input.once("pointerdown", () => {
-                if (this.isPlaying) {
-                    this.skip(onComplete);
-                }
-            });
+            if (skippable) {
+                // 한 프레임 뒤에 등록해서 현재 클릭 이벤트가 소비되지 않도록
+                this.scene.time.delayedCall(100, () => {
+                    this.scene.input.once("pointerdown", () => {
+                        if (this.isPlaying) {
+                            this.skip(onComplete);
+                        }
+                    });
+                });
+            }
         }
     }
 

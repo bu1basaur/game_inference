@@ -7,14 +7,9 @@ export class Boot extends Scene {
     }
 
     preload() {
-        this.load.image("bg", "assets/common/image/bg.png");
-
-        this.loadAssets();
-
-        // 간단한 프로그레스 바
+        // progress bar
         const centerX = this.scale.width / 2;
         const centerY = this.scale.height / 2;
-
         this.add
             .rectangle(centerX, centerY, 468, 32)
             .setStrokeStyle(1, 0xffffff);
@@ -22,6 +17,8 @@ export class Boot extends Scene {
         this.load.on("progress", (progress: number) => {
             bar.width = 4 + 460 * progress;
         });
+
+        this.loadAssets();
     }
 
     async create() {
@@ -30,7 +27,9 @@ export class Boot extends Scene {
     }
 
     /** 애셋 로드 */
-    private async loadAssets() {}
+    private loadAssets() {
+        this.load.image("bg", "assets/common/images/bg.png");
+    }
 
     /** 폰트 로드 */
     private async loadFont() {
@@ -55,5 +54,6 @@ export class Boot extends Scene {
     /** 씬 시작 */
     private sceneStart() {
         this.scene.start("MainMenu");
+        // this.scene.start("Preloader");
     }
 }

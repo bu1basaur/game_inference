@@ -3,26 +3,28 @@ import { AssetManifest } from "../../types/Assets";
 export const COMMON_ASSETS: AssetManifest = {
     basePath: "assets/common/",
     images: {
-        ui: { "btn-next": "image/ui/btn-next.png" },
-        bg: { bg: "image/bg.png" },
+        root: {
+            bg: "bg", // → assets/common/images/bg.png
+        },
+        ui: {
+            "btn-next": "btn-next", // → assets/common/images/ui/btn-next.png
+        },
     },
     audio: {
-        // sfx: { "click-sound": "sound/sfx/click.mp3" },
-    },
-    spine: {
-        // characters: ["char1", "char2"],
+        // sfx: { "click-sound": "click.mp3" }, // → assets/common/audio/sfx/click.mp3
     },
 };
 
 export const GAME_ASSETS: AssetManifest = {
-    basePath: "assets/",
+    basePath: "assets/game/",
     images: {
-        // ui: { "btn-next": "image/ui/btn-next.png" },
-    },
-    audio: {
-        // sfx: { "click-sound": "sound/sfx/click.mp3" },
+        root: {
+            dialogue: "dialogue",
+            "icon-chat": "icon-chat",
+        },
     },
     spine: {
+        basePath: "assets/spine/",
         characters: ["nyangi"],
     },
 };

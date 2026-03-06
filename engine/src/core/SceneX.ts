@@ -1,14 +1,7 @@
 import Phaser from "phaser";
 import { BaseComponent, mixin } from "./BaseComponent";
 
-/** 자산 관리를 위한 인터페이스 정의 */
-interface AssetManifest {
-    basePath: string;
-    images?: Record<string, Record<string, string>>; // { category: { key: path } }
-    audio?: Record<string, Record<string, string>>;
-    video?: Record<string, Record<string, string>>;
-    spine?: Record<string, string[]>; // { category: [spine_keys] }
-}
+import { AssetManifest } from "../types/Assets";
 
 export class SceneX extends Phaser.Scene {
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {
@@ -20,38 +13,52 @@ export class SceneX extends Phaser.Scene {
      * @param manifest 로드할 자산 정보 객체
      */
     public loadAssets(manifest: AssetManifest): void {
-        const { basePath, ...assetTypes } = manifest;
+        const { basePath, images, audio, spine } = manifest;
 
-        Object.entries(assetTypes).forEach(([type, categories]) => {
-            if (!categories) return;
+        if (images) {
+            Object.entries(images).forEach(([category, files]) => {
+                if (!files) return;
+                Object.entries(files).forEach(([key, fileName]) => {
+                    const resolvedName = fileName.includes(".")
+                        ? fileName
+                        : `${fileName}.png`;
 
-            Object.entries(categories).forEach(([category, files]) => {
-                // files가 객체인 경우 (이미지, 사운드 등)
-                if (typeof files === "object" && !Array.isArray(files)) {
-                    Object.entries(files).forEach(([key, fileName]) => {
-                        const fullPath = `${basePath}${fileName}`;
+                    const autoPath =
+                        category === "root"
+                            ? `${basePath}images/${resolvedName}`
+                            : `${basePath}images/${category}/${resolvedName}`;
 
-                        switch (type) {
-                            case "images":
-                                this.load.image(key, fullPath);
-                                break;
-                            case "audio":
-                                this.load.audio(key, fullPath);
-                                break;
-                            case "video":
-                                this.load.video(key, fullPath);
-                                break;
-                        }
-                    });
-                }
-                // files가 배열인 경우 (기존 Spine 로직 활용)
-                else if (Array.isArray(files) && type === "spine") {
-                    files.forEach((spineKey) =>
-                        this.loadSpine(spineKey, basePath)
-                    );
-                }
+                    this.load.image(key, autoPath);
+                });
             });
-        });
+        }
+        if (audio) {
+            Object.entries(audio).forEach(([category, files]) => {
+                if (!files) return; // undefined 스킵
+                Object.entries(files).forEach(([key, fileName]) => {
+                    const autoPath =
+                        category === "root"
+                            ? `${basePath}audio/${fileName}`
+                            : `${basePath}audio/${category}/${fileName}`;
+                    this.load.audio(key, autoPath);
+                });
+            });
+        }
+
+        if (spine) {
+            const { basePath: spineBase, ...spineCategories } = spine as {
+                basePath?: string;
+                [category: string]: string[] | string | undefined;
+            };
+            const resolvedBase = spineBase ?? `${basePath}spine/`;
+
+            Object.entries(spineCategories).forEach(([_, files]) => {
+                if (!Array.isArray(files)) return;
+                files.forEach((spineKey) =>
+                    this.loadSpine(spineKey, resolvedBase)
+                );
+            });
+        }
     }
 
     /**

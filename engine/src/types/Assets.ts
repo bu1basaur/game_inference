@@ -1,7 +1,15 @@
 export interface AssetManifest {
     basePath: string;
-    images?: Record<string, Record<string, string>>;
-    audio?: Record<string, Record<string, string>>;
-    video?: Record<string, Record<string, string>>;
-    spine?: Record<string, string[]>;
+    images?: {
+        root?: Record<string, string>;
+        [category: string]: Record<string, string> | undefined;
+    };
+    audio?: {
+        root?: Record<string, string>;
+        [category: string]: Record<string, string> | undefined;
+    };
+    spine?: {
+        basePath?: string;
+        [category: string]: string[] | string | undefined;
+    };
 }

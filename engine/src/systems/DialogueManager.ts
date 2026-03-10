@@ -98,11 +98,12 @@ export class DialogueManager {
     clearAutoNext() {
         this.autoNextTimer?.remove(false);
         this.autoNextTimer = undefined;
-        this.scene.input.off("pinterdown");
+        this.scene.input.off("pointerdown");
     }
 
     /** 대화창 노출/숨김 */
     setVisible(visible: boolean) {
+        if (!visible) this.clearAutoNext();
         this.dialogueBox.setVisible(visible);
         this.speakerBox.setVisible(visible);
         this.speakerText.setVisible(visible);

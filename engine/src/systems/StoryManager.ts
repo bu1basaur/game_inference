@@ -36,8 +36,9 @@ export class StoryManager {
         }
 
         if (this.story.canContinue) {
-            const text = this.story.Continue() ?? "";
+            const raw = this.story.Continue() ?? "";
             const tags = this.story.currentTags ?? [];
+            const text = this.restoreColor(raw.trim()).replace(/\\n/g, "\n");
 
             return {
                 text: text.trim(),
@@ -46,7 +47,6 @@ export class StoryManager {
                 ...this.parseTags(tags),
             };
         }
-
         // 선택지만 있는 경우
         return {
             text: "",
@@ -71,6 +71,13 @@ export class StoryManager {
         });
 
         return result;
+    }
+
+    private restoreColor(text: string): string {
+        return text.replace(/\[color=(\w+)\]/g, (_, colorName) => {
+            const hex = this.COLOR_MAP[colorName] ?? colorName;
+            return `[color=${hex}]`;
+        });
     }
 
     jumpTo(knot: string): void {

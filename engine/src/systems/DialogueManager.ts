@@ -15,6 +15,8 @@ export class DialogueManager {
 
     private choiceButtons: BBCodeTextType[] = [];
 
+    private autoNextTimer?: Phaser.Time.TimerEvent;
+
     constructor(scene: Phaser.Scene) {
         this.scene = scene;
         this.buildUI();
@@ -57,18 +59,46 @@ export class DialogueManager {
     }
 
     /** 대화창 보여주기 */
-    show(step: StoryStep, onComplete?: () => void) {
+    show(step: StoryStep, onComplete?: () => void, autoNext: boolean = true) {
         this.setVisible(true);
+        this.clearChoices();
+        this.clearAutoNext();
         this.speakerText.setText(step.speaker ?? "");
         this.speakerBox.setVisible(!!step.speaker);
 
-        console.log(step.text);
+        // console.log(step.text);
 
         // 대사 타이핑
         this.typewriter.play(step.text, {
             speed: 40,
-            onComplete,
+            onComplete: () => {
+                if (autoNext) {
+                    // 대사 끝나고 2초 후 자동 넘김
+                    this.autoNextTimer = this.scene.time.delayedCall(
+                        2000,
+                        () => {
+                            onComplete?.();
+                        }
+                    );
+
+                    // 화면 클릭시에도 대사 넘어감
+                    this.scene.input.once("pointerdown", () => {
+                        this.autoNextTimer?.remove(false);
+                        this.autoNextTimer = undefined;
+                        onComplete?.();
+                    });
+                } else {
+                    onComplete?.();
+                }
+            },
         });
+    }
+
+    /** 자동 넘김 타이머 정리 */
+    clearAutoNext() {
+        this.autoNextTimer?.remove(false);
+        this.autoNextTimer = undefined;
+        this.scene.input.off("pinterdown");
     }
 
     /** 대화창 노출/숨김 */
@@ -127,6 +157,7 @@ export class DialogueManager {
 
     /** 선택지 제거 */
     clearChoices() {
+        console.log("선택지 제거");
         this.choiceButtons.forEach((b) => b.destroy());
         this.choiceButtons = [];
     }

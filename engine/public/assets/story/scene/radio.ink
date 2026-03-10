@@ -10,6 +10,6 @@
 # emotion: surprised
 이런, 이 동네 근처라고?
 
-# speaker: 잡호점 사장
+# speaker: 잡화점 사장
 험한 세상이군.
 -> DONE

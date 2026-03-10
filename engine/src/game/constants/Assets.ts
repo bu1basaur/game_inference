@@ -1,4 +1,4 @@
-import { AssetManifest } from "../../types/Assets";
+import { AssetManifest } from "../../types/Types";
 
 export const COMMON_ASSETS: AssetManifest = {
     basePath: "assets/common/",
@@ -20,7 +20,9 @@ export const GAME_ASSETS: AssetManifest = {
     images: {
         root: {
             dialogue: "dialogue",
-            "icon-chat": "icon-chat",
+            "clock-face": "clock-face",
+            "clock-hour": "clock-hour",
+            "clock-minute": "clock-minute",
         },
     },
     spine: {

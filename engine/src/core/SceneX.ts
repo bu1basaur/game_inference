@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { BaseComponent, mixin } from "./BaseComponent";
 
-import { AssetManifest } from "../types/Assets";
+import { AssetManifest } from "../types/Types";
 
 export class SceneX extends Phaser.Scene {
     constructor(config?: string | Phaser.Types.Scenes.SettingsConfig) {

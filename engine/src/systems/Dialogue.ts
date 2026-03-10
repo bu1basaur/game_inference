@@ -16,6 +16,8 @@ export class Dialogue {
     private index = 0;
     private isPlaying = false;
 
+    private skipListener?: () => void;
+
     constructor(scene: Phaser.Scene, target: any) {
         this.scene = scene;
         this.target = target;
@@ -75,16 +77,14 @@ export class Dialogue {
         });
 
         if (skippable) {
-            if (skippable) {
-                // 한 프레임 뒤에 등록해서 현재 클릭 이벤트가 소비되지 않도록
-                this.scene.time.delayedCall(100, () => {
-                    this.scene.input.once("pointerdown", () => {
-                        if (this.isPlaying) {
-                            this.skip(onComplete);
-                        }
-                    });
-                });
-            }
+            this.scene.time.delayedCall(100, () => {
+                if (!this.isPlaying) return; // 이미 끝났으면 등록 안 함
+
+                this.skipListener = () => {
+                    if (this.isPlaying) this.skip(onComplete);
+                };
+                this.scene.input.once("pointerdown", this.skipListener);
+            });
         }
     }
 
@@ -100,6 +100,12 @@ export class Dialogue {
         this.timer?.remove(false);
         this.timer = undefined;
         this.isPlaying = false;
+
+        // pointerdown 리스너 정리
+        if (this.skipListener) {
+            this.scene.input.off("pointerdown", this.skipListener);
+            this.skipListener = undefined;
+        }
     }
 
     private finish(onComplete?: () => void) {

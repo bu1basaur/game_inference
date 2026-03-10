@@ -7,6 +7,7 @@ import { DialogueManager } from "../../systems/DialogueManager";
 import { TimelineManager } from "../../systems/TimelineManager";
 
 import { TIMELINE_EVENTS } from "../data/Timeline";
+import { ClockDisplay } from "../../systems/ClockDisplay";
 
 export class Game extends Scene {
     // ESC입력 시 일시정지 & 재개
@@ -16,6 +17,7 @@ export class Game extends Scene {
     private storyManager!: StoryManager;
     private dialogueManager!: DialogueManager;
     private timelineManager!: TimelineManager;
+    private clockDisplay: ClockDisplay;
 
     constructor() {
         super("Game");
@@ -38,6 +40,7 @@ export class Game extends Scene {
         this.storyManager = await StoryManager.load("/assets/story/main.json");
         this.dialogueManager = new DialogueManager(this);
         this.timelineManager = new TimelineManager();
+        this.clockDisplay = new ClockDisplay(this);
 
         // 타임라인 이벤트 일괄 등록
         this.timelineManager.registerAll(TIMELINE_EVENTS);
@@ -58,6 +61,11 @@ export class Game extends Scene {
     update(_: number, delta: number) {
         this.timelineManager.tick(delta);
 
+        // 시간 업데이트
+        const { hour, minute } = this.timelineManager.getTime();
+        this.clockDisplay.update(hour, minute);
+
+        // ESC 체크
         if (Phaser.Input.Keyboard.JustDown(this.escKey)) {
             this.isPaused ? this.resumeGame() : this.pauseGame();
         }
@@ -88,21 +96,36 @@ export class Game extends Scene {
         step.events.forEach((evt) => this.handleEvent(evt));
 
         if (step.text) {
-            this.dialogueManager.show(step, () => {
-                if (step.choices.length > 0) {
-                    this.dialogueManager.showChoices(step.choices, (i) => {
-                        this.storyManager.choose(i);
+            const hasChoices = step.choices.length > 0;
+
+            this.dialogueManager.show(
+                step,
+                () => {
+                    if (hasChoices) {
+                        // 대사 끝난 후 선택지 표시 (자동넘김/클릭 없이)
+                        this.dialogueManager.showChoices(step.choices, (i) => {
+                            this.storyManager.choose(i);
+                            this.advanceStory();
+                        });
+                        console.log("선택지 표시1");
+                    } else {
+                        // 선택지 없으면 자동넘김
                         this.advanceStory();
-                    });
-                } else {
-                    this.input.once("pointerdown", () => this.advanceStory());
-                }
-            });
-        } else if (step.choices.length > 0) {
+                    }
+                },
+                !hasChoices
+            ); // 선택지 없을 때만 autoNext
+            return;
+        }
+
+        // 텍스트 없이 선택지만 있는 경우
+        if (step.choices.length > 0) {
             this.dialogueManager.showChoices(step.choices, (i) => {
                 this.storyManager.choose(i);
                 this.advanceStory();
             });
+
+            console.log("선택지 표시2");
         }
     }
 

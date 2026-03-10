@@ -30,7 +30,8 @@ export class DialogueManager {
         // 다이얼로그 박스 (하단)
         this.dialogueBox = this.scene.add
             .rectangle(W / 2, H - 160, W - 80, 300, 0x000000, 0.8)
-            .setStrokeStyle(2, 0xffffff, 0.5);
+            .setStrokeStyle(2, 0xffffff, 0.5)
+            .setInteractive();
 
         // 화자 이름 박스
         this.speakerBox = this.scene.add
@@ -55,7 +56,11 @@ export class DialogueManager {
         });
         this.scene.add.existing(this.dialogueText);
 
-        this.typewriter = new Dialogue(this.scene, this.dialogueText);
+        this.typewriter = new Dialogue(
+            this.scene,
+            this.dialogueText,
+            this.dialogueBox
+        );
     }
 
     /** 대화창 보여주기 */
@@ -82,7 +87,7 @@ export class DialogueManager {
                     );
 
                     // 화면 클릭시에도 대사 넘어감
-                    this.scene.input.once("pointerdown", () => {
+                    this.dialogueBox.once("pointerdown", () => {
                         this.autoNextTimer?.remove(false);
                         this.autoNextTimer = undefined;
                         onComplete?.();
@@ -98,7 +103,7 @@ export class DialogueManager {
     clearAutoNext() {
         this.autoNextTimer?.remove(false);
         this.autoNextTimer = undefined;
-        this.scene.input.off("pointerdown");
+        this.dialogueBox.off("pointerdown");
     }
 
     /** 대화창 노출/숨김 */

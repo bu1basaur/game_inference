@@ -9,6 +9,7 @@ export type DialogueOptions = {
 export class Dialogue {
     private scene: Phaser.Scene;
     private target: any; // rexBBCodeText
+    private skipTarget: Phaser.GameObjects.GameObject;
     private timer?: Phaser.Time.TimerEvent;
 
     private fullText = "";
@@ -18,9 +19,14 @@ export class Dialogue {
 
     private skipListener?: () => void;
 
-    constructor(scene: Phaser.Scene, target: any) {
+    constructor(
+        scene: Phaser.Scene,
+        target: any,
+        skipTarget: Phaser.GameObjects.GameObject
+    ) {
         this.scene = scene;
         this.target = target;
+        this.skipTarget = skipTarget;
     }
 
     /** 다이얼로그 출력 */
@@ -83,7 +89,7 @@ export class Dialogue {
                 this.skipListener = () => {
                     if (this.isPlaying) this.skip(onComplete);
                 };
-                this.scene.input.once("pointerdown", this.skipListener);
+                this.skipTarget.once("pointerdown", this.skipListener);
             });
         }
     }
@@ -103,7 +109,7 @@ export class Dialogue {
 
         // pointerdown 리스너 정리
         if (this.skipListener) {
-            this.scene.input.off("pointerdown", this.skipListener);
+            this.skipTarget.off("pointerdown", this.skipListener);
             this.skipListener = undefined;
         }
     }

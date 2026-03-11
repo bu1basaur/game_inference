@@ -26,17 +26,20 @@ export class DialogueManager {
     private buildUI() {
         const W = this.scene.scale.width;
         const H = this.scene.scale.height;
+        const DEPTH = 100;
 
         // 다이얼로그 박스 (하단)
         this.dialogueBox = this.scene.add
             .rectangle(W / 2, H - 160, W - 80, 300, 0x000000, 0.8)
             .setStrokeStyle(2, 0xffffff, 0.5)
-            .setInteractive();
+            .setInteractive()
+            .setDepth(DEPTH);
 
         // 화자 이름 박스
         this.speakerBox = this.scene.add
             .rectangle(200, H - 330, 280, 60, 0x000000, 0.8)
-            .setStrokeStyle(2, 0xffffff, 0.5);
+            .setStrokeStyle(2, 0xffffff, 0.5)
+            .setDepth(DEPTH);
 
         // 화자 이름 텍스트
         this.speakerText = this.scene.add
@@ -45,7 +48,8 @@ export class DialogueManager {
                 fontSize: "32px",
                 color: "#ffffff",
             })
-            .setOrigin(0.5);
+            .setOrigin(0.5)
+            .setDepth(DEPTH);
 
         // 대사 텍스트
         this.dialogueText = new BBCodeText(this.scene, 100, H - 275, "", {
@@ -55,6 +59,7 @@ export class DialogueManager {
             wrap: { mode: "word", width: W - 160 },
         });
         this.scene.add.existing(this.dialogueText);
+        this.dialogueText.setDepth(DEPTH);
 
         this.typewriter = new Dialogue(
             this.scene,
@@ -157,6 +162,7 @@ export class DialogueManager {
                 });
 
             this.scene.add.existing(btn);
+            btn.setDepth(100);
             this.choiceButtons.push(btn);
         });
     }

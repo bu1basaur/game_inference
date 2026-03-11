@@ -23,6 +23,8 @@ export const GAME_ASSETS: AssetManifest = {
             "clock-face": "clock-face",
             "clock-hour": "clock-hour",
             "clock-minute": "clock-minute",
+            poo: "poo",
+            fly: "fly",
         },
     },
     spine: {

@@ -8,6 +8,7 @@ import { TimelineManager } from "../../systems/TimelineManager";
 
 import { TIMELINE_EVENTS } from "../data/Timeline";
 import { ClockDisplay } from "../../systems/ClockDisplay";
+import { Poo } from "../objects/Poo";
 
 export class Game extends Scene {
     // ESC입력 시 일시정지 & 재개
@@ -18,6 +19,8 @@ export class Game extends Scene {
     private dialogueManager!: DialogueManager;
     private timelineManager!: TimelineManager;
     private clockDisplay: ClockDisplay;
+
+    private poo?: Poo;
 
     constructor() {
         super("Game");
@@ -73,6 +76,16 @@ export class Game extends Scene {
 
     /** 타임라인에 맞는 이벤트 호출 */
     private onTimelineEvent(eventKey: string) {
+        if (eventKey === "scene_open") {
+            this.poo = new Poo(this);
+            this.poo.show();
+        }
+
+        if (eventKey === "fly_add") {
+            this.poo?.addFly();
+            return; // 대화 트리거 없음
+        }
+
         if (eventKey === "shop_close") {
             // 영업 종료 처리
             return;

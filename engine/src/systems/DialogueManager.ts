@@ -57,6 +57,7 @@ export class DialogueManager {
             fontSize: "36px",
             color: "#ffffff",
             wrap: { mode: "word", width: W - 160 },
+            lineSpacing: 6,
         });
         this.scene.add.existing(this.dialogueText);
         this.dialogueText.setDepth(DEPTH);
@@ -169,7 +170,6 @@ export class DialogueManager {
 
     /** 선택지 제거 */
     clearChoices() {
-        console.log("선택지 제거");
         this.choiceButtons.forEach((b) => b.destroy());
         this.choiceButtons = [];
     }

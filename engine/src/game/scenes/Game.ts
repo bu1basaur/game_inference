@@ -8,7 +8,9 @@ import { TimelineManager } from "../../systems/TimelineManager";
 
 import { TIMELINE_EVENTS } from "../data/Timeline";
 import { ClockDisplay } from "../../systems/ClockDisplay";
-import { Poo } from "../objects/Poo";
+import { BirdPoo } from "../objects/BirdPoo";
+import { CHARACTERS } from "../data/Characters";
+import { CharacterManager } from "../../systems/CharacterManager";
 
 export class Game extends Scene {
     // ESC입력 시 일시정지 & 재개
@@ -16,11 +18,12 @@ export class Game extends Scene {
     private isPaused = false;
 
     private storyManager!: StoryManager;
+    private characterManager: CharacterManager;
     private dialogueManager!: DialogueManager;
     private timelineManager!: TimelineManager;
     private clockDisplay: ClockDisplay;
 
-    private poo?: Poo;
+    private poo?: BirdPoo;
 
     constructor() {
         super("Game");
@@ -40,6 +43,7 @@ export class Game extends Scene {
         // this.test();
 
         // 매니저 초기화
+        this.characterManager = new CharacterManager(this);
         this.storyManager = await StoryManager.load("/assets/story/main.json");
         this.dialogueManager = new DialogueManager(this);
         this.timelineManager = new TimelineManager();
@@ -74,25 +78,26 @@ export class Game extends Scene {
         }
     }
 
-    /** 타임라인에 맞는 이벤트 호출 */
+    /** 타임라인에 맞는 이벤트 필요시 호출 */
     private onTimelineEvent(eventKey: string) {
         if (eventKey === "scene_open") {
-            this.poo = new Poo(this);
+            this.poo = new BirdPoo(this);
             this.poo.show();
         }
 
         if (eventKey === "fly_add") {
             this.poo?.addFly();
-            return; // 대화 트리거 없음
-        }
-
-        if (eventKey === "shop_close") {
-            // 영업 종료 처리
             return;
         }
+
+        // 영업 종료 처리
+        if (eventKey === "shop_close") {
+            return;
+        }
+        console.log("이벤트키: " + eventKey);
+
         this.storyManager.jumpTo(eventKey);
-        this.dialogueManager.setVisible(true);
-        this.timelineManager.pause(); // 대화 시작 → 시간 정지
+        this.timelineManager.pause();
         this.advanceStory();
     }
 
@@ -106,54 +111,83 @@ export class Game extends Scene {
             return;
         }
 
-        step.events.forEach((evt) => this.handleEvent(evt));
-
-        if (step.text) {
-            const hasChoices = step.choices.length > 0;
-
-            this.dialogueManager.show(
-                step,
-                () => {
-                    if (hasChoices) {
-                        // 대사 끝난 후 선택지 표시 (자동넘김/클릭 없이)
-                        this.dialogueManager.showChoices(step.choices, (i) => {
-                            this.storyManager.choose(i);
-                            this.advanceStory();
-                        });
-                        console.log("선택지 표시1");
-                    } else {
-                        // 선택지 없으면 자동넘김
-                        this.advanceStory();
-                    }
-                },
-                !hasChoices
-            ); // 선택지 없을 때만 autoNext
-            return;
-        }
-
-        // 텍스트 없이 선택지만 있는 경우
-        if (step.choices.length > 0) {
-            this.dialogueManager.showChoices(step.choices, (i) => {
-                this.storyManager.choose(i);
+        // 이벤트 처리
+        this.handleEvents(step.events).then(() => {
+            if (!step.text && step.choices.length === 0) {
                 this.advanceStory();
-            });
+                return;
+            }
 
-            console.log("선택지 표시2");
+            if (step.text) {
+                const hasChoices = step.choices.length > 0;
+
+                this.dialogueManager.show(
+                    step,
+                    () => {
+                        if (hasChoices) {
+                            // 대사 끝난 후 선택지 표시 (자동넘김/클릭 없이)
+                            this.dialogueManager.showChoices(
+                                step.choices,
+                                (i) => {
+                                    this.storyManager.choose(i);
+                                    this.advanceStory();
+                                }
+                            );
+                        } else {
+                            // 선택지 없으면 자동넘김
+                            this.advanceStory();
+                        }
+                    },
+                    !hasChoices
+                );
+                return;
+            }
+
+            // 텍스트 없이 선택지만 있는 경우
+            if (step.choices.length > 0) {
+                this.dialogueManager.showChoices(step.choices, (i) => {
+                    this.storyManager.choose(i);
+                    this.advanceStory();
+                });
+                return;
+            }
+
+            // 텍스트도 선택지도 없고 이벤트만 있는 경우 → 자동으로 다음으로
+            this.advanceStory();
+        });
+    }
+
+    /** 이벤트 배열 순차 처리 */
+    private async handleEvents(events: string[]): Promise<void> {
+        for (const evt of events) {
+            await this.handleEvent(evt);
         }
     }
 
     /** 대화 중 이벤트 처리 메서드 */
-    private handleEvent(event: string) {
-        switch (event) {
-            // 캐릭터 등장/퇴장
-            case "char_show":
-                // this.characterManager.show(...)
-                console.log("캐릭터 등장");
+    private async handleEvent(event: string): Promise<void> {
+        const [type, ...args] = event.split(":");
+
+        switch (type) {
+            // 캐릭터
+            case "char_enter": {
+                const [id] = args;
+                const config = CHARACTERS[id];
+                if (config) await this.characterManager.enter(id, config);
                 break;
-            case "char_hide":
-                // this.characterManager.hide(...)
-                console.log("캐릭터 퇴장");
+            }
+            case "char_exit": {
+                const [id] = args;
+                this.dialogueManager.setVisible(false);
+                await this.characterManager.exit(id);
                 break;
+            }
+            case "char_anim": {
+                const [id, anim, loopStr] = args;
+                const loop = loopStr !== "false";
+                this.characterManager.setAnim(id, anim, loop);
+                break;
+            }
 
             // 효과음
             case "sfx_bell":

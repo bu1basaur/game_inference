@@ -1,4 +1,4 @@
-export class Poo {
+export class BirdPoo {
     private scene: Phaser.Scene;
     private poo?: Phaser.GameObjects.Image;
     private flies: Phaser.GameObjects.Image[] = [];
@@ -56,7 +56,7 @@ export class Poo {
 
             if (Phaser.Math.Between(0, 100) < 25) {
                 this.scene.time.delayedCall(
-                    Phaser.Math.Between(800, 1800),
+                    Phaser.Math.Between(1000, 2800),
                     moveToRandom
                 );
                 return;
@@ -92,7 +92,7 @@ export class Poo {
                 },
                 onComplete: () => {
                     this.scene.time.delayedCall(
-                        Phaser.Math.Between(100, 600),
+                        Phaser.Math.Between(600, 1200),
                         moveToRandom
                     );
                 },
@@ -109,7 +109,7 @@ export class Poo {
         });
 
         // 처음엔 멈춰있다가 시작
-        this.scene.time.delayedCall(Phaser.Math.Between(800, 2500), () =>
+        this.scene.time.delayedCall(Phaser.Math.Between(1200, 2500), () =>
             moveToRandom()
         );
     }

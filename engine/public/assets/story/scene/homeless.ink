@@ -1,5 +1,9 @@
 === scene_homeless ===
+# event: char_enter:homeless
 
+-> homeless_wait
+
+= homeless_wait
 # speaker: 노숙자
 # emotion: nervous
 저... 실례합니다.\\n혹시... 물건을 좀 살 수 있을까 해서요.
@@ -142,6 +146,10 @@
 # speaker: 노숙자
 덕분에 큰 도움 받았습니다.
 
+-> homeless_give_exit
+
+= homeless_give_exit
+# event: char_exit:homeless
 -> DONE
 
 = homeless_phonebook_deny
@@ -153,5 +161,9 @@
 # speaker: 노숙자
 죄송합니다. 그냥 가보겠습니다.
 
+-> homeless_give_exit
+
+= homeless_give_exit
+# event: char_exit:homeless
 -> DONE
 

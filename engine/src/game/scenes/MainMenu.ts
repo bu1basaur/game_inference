@@ -3,9 +3,13 @@ import { EventBus } from "../../events/EventBus";
 import { GAME_EVT } from "../../events/GameEvt";
 
 const MENU_ITEMS = [
-    { label: "GAME START", action: "start" },
-    { label: "OPTION", action: "option" },
-    { label: "EXIT", action: "exit" },
+    { label: "게임 시작", action: "start", x: 80, y: 690 },
+    { label: "불러오기", action: "start", x: 80, y: 780 },
+    { label: "옵션", action: "option", x: 80, y: 870 },
+    { label: "나가기", action: "exit", x: 80, y: 960 },
+
+    { label: "수집한 엔딩", action: "option", x: 1620, y: 800 },
+    { label: "만든 사람들", action: "option", x: 1620, y: 890 },
 ] as const;
 
 type MenuAction = (typeof MENU_ITEMS)[number]["action"];
@@ -27,20 +31,19 @@ export class MainMenu extends Scene {
         console.log("타이틀 생성");
         // 타이틀
         this.add
-            .text(700, 400, "이름 뭐하지", {
+            .text(700, 350, "팔래말래(가제)", {
                 fontFamily: "Kkokkoma",
-                fontSize: "120px",
+                fontSize: "180px",
                 color: "#ffffff",
+                padding: { bottom: 20 },
             })
             .setOrigin(0.5);
 
         // 메뉴 버튼
-        const startX = 150;
-        const startY = 640;
-        const gap = 110;
+        const gap = 90;
 
-        MENU_ITEMS.forEach(({ label, action }, i) => {
-            this.createMenuButton(label, startX, startY + gap * i, action);
+        MENU_ITEMS.forEach(({ label, action, x, y }, i) => {
+            this.createMenuButton(label, x, y, action);
         });
 
         EventBus.emit(GAME_EVT.SCENE_READY, this);
@@ -57,7 +60,7 @@ export class MainMenu extends Scene {
         const btn = this.add
             .text(x, y, label, {
                 fontFamily: "Bunpil",
-                fontSize: "60px",
+                fontSize: "54px",
                 color: "#ffffff",
             })
             .setOrigin(0, 0.5)

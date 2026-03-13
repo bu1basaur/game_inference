@@ -36,6 +36,8 @@ function compileInk(filePath) {
         console.log(`✅ ink compiled: ${path.basename(outPath)}`);
     } catch (e) {
         console.error(`❌ ink compile failed:`, e.message);
+        console.error(e.stdout?.toString("utf-8")); // inkjs 오류 추적
+        console.error(e.stderr?.toString("utf-8"));
     }
 }
 

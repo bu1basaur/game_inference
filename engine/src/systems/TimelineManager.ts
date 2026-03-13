@@ -20,10 +20,13 @@ export class TimelineManager {
     private isPaused = false; // 대화 중 정지
 
     // 실제 시간 1초 = 게임 시간 N분 (조절 가능)
-    private readonly TIME_SCALE = 15;
+    private readonly TIME_SCALE = 10;
+    private readonly DIALOGUE_SCALE = 0.2; // 대화 중 시간 속도. 걍 멈추니 너무 작위적임...
+    private currentScale: number;
 
     constructor() {
         this.currentMinutes = this.START_HOUR * 60;
+        this.currentScale = this.TIME_SCALE;
     }
 
     /** 이벤트 등록 */
@@ -38,7 +41,7 @@ export class TimelineManager {
     /** 매 프레임 호출 (delta: ms) */
     tick(delta: number) {
         if (this.isPaused) return;
-        this.currentMinutes += (delta / 1000) * this.TIME_SCALE;
+        this.currentMinutes += (delta / 1000) * this.currentScale;
 
         // 영업 종료
         if (this.currentMinutes >= this.END_HOUR * 60) {
@@ -62,20 +65,28 @@ export class TimelineManager {
             });
     }
 
-    /** 대화 중 시간 정지/재개 */
+    /** 대화 시작 - 느리게 */
+    slowDown() {
+        this.isPaused = false;
+        this.currentScale = this.DIALOGUE_SCALE;
+    }
+
+    /** 대화 선택지 - 정지 */
     pause() {
         this.isPaused = true;
     }
+
+    /** 대화 종료 - 정상 속도 */
     resume() {
         this.isPaused = false;
+        this.currentScale = this.TIME_SCALE;
     }
 
     /** 현재 시간 반환 */
     getTime(): { hour: number; minute: number } {
-        const totalMin = Math.floor(this.currentMinutes);
         return {
-            hour: Math.floor(totalMin / 60),
-            minute: totalMin % 60,
+            hour: Math.floor(this.currentMinutes / 60),
+            minute: this.currentMinutes % 60,
         };
     }
 

@@ -31,11 +31,11 @@ export class Game extends Scene {
 
     preload() {
         // Spine 애니메이션 로드
-        this.load.spineBinary("nyangi", "assets/spine/nyangi/nyangi.skel");
-        this.load.spineAtlas(
-            "nyangi-atlas",
-            "assets/spine/nyangi/nyangi.atlas"
-        );
+        // this.load.spineBinary("nyangi", "assets/spine/nyangi/nyangi.skel");
+        // this.load.spineAtlas(
+        //     "nyangi-atlas",
+        //     "assets/spine/nyangi/nyangi.atlas"
+        // );
     }
 
     async create() {
@@ -66,6 +66,8 @@ export class Game extends Scene {
     }
 
     update(_: number, delta: number) {
+        if (!this.timelineManager) return;
+
         this.timelineManager.tick(delta);
 
         // 시간 업데이트
@@ -97,7 +99,7 @@ export class Game extends Scene {
         console.log("이벤트키: " + eventKey);
 
         this.storyManager.jumpTo(eventKey);
-        this.timelineManager.pause();
+        this.timelineManager.slowDown();
         this.advanceStory();
     }
 
@@ -126,10 +128,12 @@ export class Game extends Scene {
                     () => {
                         if (hasChoices) {
                             // 대사 끝난 후 선택지 표시 (자동넘김/클릭 없이)
+                            this.timelineManager.pause();
                             this.dialogueManager.showChoices(
                                 step.choices,
                                 (i) => {
                                     this.storyManager.choose(i);
+                                    this.timelineManager.slowDown();
                                     this.advanceStory();
                                 }
                             );

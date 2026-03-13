@@ -1,6 +1,5 @@
 export type CharacterConfig = {
     key: string;
-    atlasKey: string;
     x: number;
     y: number;
     anim: string;
@@ -29,7 +28,7 @@ export class CharacterManager {
 
             let startX: number;
             if (config.enterFrom === "left") startX = -200;
-            else if (config.enterFrom === "right") startX = W + 200;
+            else if (config.enterFrom === "right") startX = 1600;
             else if (typeof config.enterFrom === "number")
                 startX = config.enterFrom;
             else startX = config.x + 400;
@@ -37,8 +36,8 @@ export class CharacterManager {
             const spine = this.scene.add.spine(
                 startX,
                 config.y,
-                config.key,
-                config.atlasKey
+                `${config.key}_data`,
+                `${config.key}_atlas`
             );
 
             if (config.scale) spine.setScale(config.scale);
@@ -52,8 +51,8 @@ export class CharacterManager {
             this.scene.tweens.add({
                 targets: spine,
                 x: config.x,
-                duration: 1500,
-                ease: "Sine.easeOut",
+                duration: 3000,
+                // ease: "Sine.easeOut",
                 onComplete: () => resolve(),
             });
         });

@@ -148,10 +148,6 @@
 
 -> homeless_give_exit
 
-= homeless_give_exit
-# event: char_exit:homeless
--> DONE
-
 = homeless_phonebook_deny
 
 # speaker: 노숙자

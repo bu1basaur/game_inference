@@ -29,18 +29,10 @@ export class Game extends Scene {
         super("Game");
     }
 
-    preload() {
-        // Spine 애니메이션 로드
-        // this.load.spineBinary("nyangi", "assets/spine/nyangi/nyangi.skel");
-        // this.load.spineAtlas(
-        //     "nyangi-atlas",
-        //     "assets/spine/nyangi/nyangi.atlas"
-        // );
-    }
+    preload() {}
 
     async create() {
         this.add.image(960, 540, "bg");
-        // this.test();
 
         // 매니저 초기화
         this.characterManager = new CharacterManager(this);
@@ -52,9 +44,6 @@ export class Game extends Scene {
         // 타임라인 이벤트 일괄 등록
         this.timelineManager.registerAll(TIMELINE_EVENTS);
 
-        // 원하는 씬부터 테스트
-        // this.debugStartFrom("scene_homeless", 7, 30);
-
         // 타임라인 이벤트 수신
         EventBus.on(GAME_EVT.TIMELINE, this.onTimelineEvent, this);
 
@@ -63,6 +52,9 @@ export class Game extends Scene {
             Phaser.Input.Keyboard.KeyCodes.ESC
         );
         EventBus.on(GAME_EVT.RESUME, this.resumeGame, this);
+
+        // 원하는 씬부터 테스트
+        this.test("scene_homeless", 7, 30, true);
     }
 
     update(_: number, delta: number) {
@@ -243,26 +235,29 @@ export class Game extends Scene {
         this.scene.start("GameOver");
     }
 
-    /**
-     * 테스트용 - 원하는 씬부터 시작
-     * @param knot ink knot 이름 (예: "scene_homeless", "scene_radio_news")
-     * @param timeHour 시작 시간 hour (예: 7)
-     * @param timeMinute 시작 시간 minute (예: 30)
+    /** 테스트용
+     * @param event "scene_radio_news" 이벤트명
+     * @param hour 해당 이벤트 시작 시간
+     * @param minute 해당 이벤트 시작 분
+     * @param runPrev 이전 이벤트 모두 실행
      */
-    private debugStartFrom(
-        knot: string,
-        timeHour?: number,
-        timeMinute?: number
+    private async test(
+        event: string,
+        hour: number,
+        minute: number,
+        runPrev: boolean
     ) {
-        // 시간 강제 설정
-        if (timeHour !== undefined) {
-            this.timelineManager.setTime(timeHour, timeMinute ?? 0);
+        if (import.meta.env.DEV) {
+            const { GameDebugger } = await import("../debug/GameDebugger");
+            const debug = new GameDebugger({
+                scene: this,
+                storyManager: this.storyManager,
+                dialogueManager: this.dialogueManager,
+                timelineManager: this.timelineManager,
+                poo: this.poo,
+                advanceStory: () => this.advanceStory(),
+            });
+            debug.startFrom(event, hour, minute, runPrev);
         }
-
-        // 해당 knot으로 점프해서 대화 시작
-        this.storyManager.jumpTo(knot);
-        this.dialogueManager.setVisible(true);
-        this.timelineManager.pause();
-        this.advanceStory();
     }
 }

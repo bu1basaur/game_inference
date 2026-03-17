@@ -12,6 +12,11 @@ import { BirdPoo } from "../objects/BirdPoo";
 import { CHARACTERS } from "../data/Characters";
 import { CharacterManager } from "../../systems/CharacterManager";
 
+import { Calculator } from "../objects/Calculator";
+import { Board } from "../objects/Board";
+import { Inventory } from "../objects/Inventory";
+import { Receipt } from "../objects/Receipt";
+
 export class Game extends Scene {
     // ESC입력 시 일시정지 & 재개
     private escKey!: Phaser.Input.Keyboard.Key;
@@ -41,6 +46,8 @@ export class Game extends Scene {
         this.timelineManager = new TimelineManager();
         this.clockDisplay = new ClockDisplay(this);
 
+        this.createObjects();
+
         // 타임라인 이벤트 일괄 등록
         this.timelineManager.registerAll(TIMELINE_EVENTS);
 
@@ -55,6 +62,17 @@ export class Game extends Scene {
 
         // 원하는 씬부터 테스트
         this.test("scene_homeless", 7, 30, true);
+    }
+
+    private createObjects() {
+        const calculator = new Calculator(this);
+        calculator.show();
+
+        const board = new Board(this);
+        board.show();
+
+        new Inventory(this);
+        new Receipt(this);
     }
 
     update(_: number, delta: number) {

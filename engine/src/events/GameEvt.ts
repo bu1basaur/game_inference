@@ -14,6 +14,10 @@ export const GAME_EVT = {
     // 타임라인
     TIMELINE: "timeline",
     SHOP_CLOSE: "shop_close",
+
+    // 쪽지 보기 & 닫기
+    OPEN_NOTE: "OPEN_NOTE",
+    CLOSE_NOTE: "CLOSE_NOTE",
 } as const;
 
 export type EventKey = (typeof GAME_EVT)[keyof typeof GAME_EVT];

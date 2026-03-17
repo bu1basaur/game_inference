@@ -1,35 +1,17 @@
-import { TIMELINE_EVENTS } from "../data/Timeline";
+import { Game } from "../scenes/Game";
 import { BirdPoo } from "../objects/BirdPoo";
-import { StoryManager } from "../../systems/StoryManager";
-import { DialogueManager } from "../../systems/DialogueManager";
-import { TimelineManager } from "../../systems/TimelineManager";
-
-type DebugDeps = {
-    scene: Phaser.Scene;
-    storyManager: StoryManager;
-    dialogueManager: DialogueManager;
-    timelineManager: TimelineManager;
-    poo?: BirdPoo;
-    advanceStory: () => void;
-};
+import { Trash } from "../objects/Trash";
+import { TIMELINE_EVENTS } from "../data/Timeline";
 
 export class GameDebugger {
-    constructor(private deps: DebugDeps) {}
+    constructor(private game: Game) {}
 
-    startFrom(
-        knot: string,
-        hour?: number,
-        minute?: number,
-        runPrevious = false
-    ) {
-        const { storyManager, dialogueManager, timelineManager, advanceStory } =
-            this.deps;
-
+    startFrom(knot: string, hour?: number, minute?: number, runPrev = true) {
         if (hour !== undefined) {
-            timelineManager.setTime(hour, minute ?? 0);
+            this.game.timelineManager.setTime(hour, minute ?? 0);
         }
 
-        if (runPrevious) {
+        if (runPrev) {
             const targetMinutes = (hour ?? 7) * 60 + (minute ?? 0);
             TIMELINE_EVENTS.filter(
                 (evt) => evt.hour * 60 + evt.minute < targetMinutes
@@ -39,21 +21,23 @@ export class GameDebugger {
             });
         }
 
-        storyManager.jumpTo(knot);
-        dialogueManager.setVisible(true);
-        timelineManager.pause();
-        advanceStory();
+        this.game.storyManager.jumpTo(knot);
+        this.game.dialogueManager.setVisible(true);
+        this.game.timelineManager.pause();
+        this.game.advanceStory();
     }
 
     private runSideEffectsOnly(eventKey: string) {
-        const { scene, poo } = this.deps;
-
         if (eventKey === "scene_open") {
-            this.deps.poo = new BirdPoo(scene);
-            this.deps.poo.show();
+            this.game.poo = new BirdPoo(this.game);
+            this.game.poo.show();
         }
         if (eventKey === "fly_add") {
-            poo?.addFly();
+            this.game.poo?.addFly();
+        }
+        if (eventKey === "scene_homeless") {
+            this.game.trash = new Trash(this.game);
+            this.game.trash.show(700, 650);
         }
     }
 }

@@ -8,9 +8,11 @@ import { TimelineManager } from "../../systems/TimelineManager";
 
 import { TIMELINE_EVENTS } from "../data/Timeline";
 import { ClockDisplay } from "../../systems/ClockDisplay";
-import { BirdPoo } from "../objects/BirdPoo";
 import { CHARACTERS } from "../data/Characters";
 import { CharacterManager } from "../../systems/CharacterManager";
+
+import { BirdPoo } from "../objects/BirdPoo";
+import { Trash } from "../objects/Trash";
 
 import { Calculator } from "../objects/Calculator";
 import { Board } from "../objects/Board";
@@ -22,13 +24,14 @@ export class Game extends Scene {
     private escKey!: Phaser.Input.Keyboard.Key;
     private isPaused = false;
 
-    private storyManager!: StoryManager;
-    private characterManager: CharacterManager;
-    private dialogueManager!: DialogueManager;
-    private timelineManager!: TimelineManager;
-    private clockDisplay: ClockDisplay;
+    public storyManager!: StoryManager;
+    public characterManager: CharacterManager;
+    public dialogueManager!: DialogueManager;
+    public timelineManager!: TimelineManager;
+    public clockDisplay: ClockDisplay;
 
-    private poo?: BirdPoo;
+    public poo?: BirdPoo;
+    public trash?: Trash;
 
     constructor() {
         super("Game");
@@ -61,7 +64,7 @@ export class Game extends Scene {
         EventBus.on(GAME_EVT.RESUME, this.resumeGame, this);
 
         // 원하는 씬부터 테스트
-        this.test("scene_homeless", 7, 30, true);
+        // this.test("scene_homeless", 7, 30, true);
     }
 
     private createObjects() {
@@ -114,7 +117,7 @@ export class Game extends Scene {
     }
 
     /** 다음 스토리 진행 */
-    private advanceStory() {
+    public advanceStory() {
         const step = this.storyManager.next();
 
         if (!step) {
@@ -193,6 +196,10 @@ export class Game extends Scene {
             case "char_exit": {
                 const [id] = args;
                 this.dialogueManager.setVisible(false);
+                if (id === "homeless") {
+                    const trash = new Trash(this);
+                    trash.show(700, 650);
+                }
                 await this.characterManager.exit(id);
                 break;
             }
@@ -267,14 +274,7 @@ export class Game extends Scene {
     ) {
         if (import.meta.env.DEV) {
             const { GameDebugger } = await import("../debug/GameDebugger");
-            const debug = new GameDebugger({
-                scene: this,
-                storyManager: this.storyManager,
-                dialogueManager: this.dialogueManager,
-                timelineManager: this.timelineManager,
-                poo: this.poo,
-                advanceStory: () => this.advanceStory(),
-            });
+            const debug = new GameDebugger(this);
             debug.startFrom(event, hour, minute, runPrev);
         }
     }

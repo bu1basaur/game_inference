@@ -25,6 +25,13 @@ export const GAME_ASSETS: AssetManifest = {
             "clock-minute": "clock-minute",
             poo: "poo",
             fly: "fly",
+            trash: "trash",
+            note_1: "note_1",
+            note_2: "note_2",
+            note_3: "note_3",
+            note_4: "note_4",
+            note_5: "note_5",
+            note_6: "note_6",
         },
     },
     spine: {

@@ -24,6 +24,7 @@ export class BirdPoo {
     }
 
     addFly() {
+        console.log("파리 추가");
         if (this.removed || !this.poo) return;
 
         const fly = this.scene.add

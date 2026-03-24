@@ -18,7 +18,9 @@ import {
     unregisterListeners,
 } from "../../systems/GameListeners";
 import { GameTimelineHandler } from "../../systems/GameTimelineHandler";
-import { GamePauseController } from "../../systems/GamePauseControl";
+import { GamePauseController } from "../../systems/GamePauseController";
+import { EventBus } from "../../events/EventBus";
+import { GAME_EVT } from "../../events/GameEvt";
 
 export class Game extends Scene {
     // ESC입력 시 일시정지 & 재개
@@ -31,8 +33,8 @@ export class Game extends Scene {
     public clockDisplay: ClockDisplay;
 
     private eventHandler: GameEventHandler;
-    private timelineHandler: GameTimelineHandler;
-    private pauseControl: GamePauseController;
+    public timelineHandler: GameTimelineHandler;
+    public pauseControl: GamePauseController;
 
     constructor() {
         super("Game");
@@ -175,6 +177,8 @@ export class Game extends Scene {
     /** 모든 게임 이벤트 제거 */
     shutdown() {
         unregisterListeners(this);
+        EventBus.removeAllListeners(GAME_EVT.TIMELINE);
+        EventBus.removeAllListeners(GAME_EVT.GOTO_MAIN);
     }
 
     /** 씬 전환 */

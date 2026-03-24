@@ -11,6 +11,8 @@ export const GAME_EVT = {
     RESUME: "RESUME",
     RESUMED: "RESUMED",
 
+    GOTO_MAIN: "GOTO_MAIN",
+
     // 타임라인
     TIMELINE: "timeline",
     SHOP_CLOSE: "shop_close",
@@ -22,6 +24,10 @@ export const GAME_EVT = {
     // 다이얼로그
     DIALOGUE_WAITING: "DIALOGUE_WAITING", // 수동 모드: 타이핑 완료. 클릭 대기 중.
     DIALOGUE_RESUME: "DIALOGUE_RESUME",
+
+    // 팝업 오브젝트 여닫기
+    POPUP_OPEN: "POPUP_OPEN",
+    POPUP_CLOSE: "POPUP_CLOSE",
 } as const;
 
 export type EventKey = (typeof GAME_EVT)[keyof typeof GAME_EVT];

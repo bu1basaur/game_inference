@@ -12,6 +12,11 @@ function App() {
         EventBus.emit(GAME_EVT.RESUME);
     };
 
+    const handleExit = () => {
+        EventBus.emit(GAME_EVT.RESUMED);
+        EventBus.emit(GAME_EVT.GOTO_MAIN);
+    };
+
     return (
         <div style={{ position: "relative", width: "100%", height: "100vh" }}>
             <PhaserGame />
@@ -20,6 +25,9 @@ function App() {
                     <span className="pause-title">PAUSED</span>
                     <button className="pause-resume-btn" onClick={handleResume}>
                         게임으로 돌아가기
+                    </button>
+                    <button className="pause-exit-btn" onClick={handleExit}>
+                        나가기
                     </button>
                 </div>
             )}

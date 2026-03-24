@@ -83,6 +83,7 @@ body {
 }
 
 .pause-title {
+    padding: 10px;
     font-family: "Bunpil";
     font-size: 4.5rem;
     font-weight: bold;
@@ -93,7 +94,6 @@ body {
 }
 
 .pause-resume-btn {
-    padding: 10px;
     color: rgba(255, 255, 255, 0.87);
     background: none;
     border: none;
@@ -104,5 +104,19 @@ body {
 
     &:hover {
         color: #0ec3c9;
+    }
+}
+
+.pause-exit-btn {
+    color: rgba(255, 255, 255, 0.87);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: "Bunpil", Arial, Helvetica, sans-serif;
+    font-size: 3rem;
+
+    &:hover {
+        color: #c91b0e;
     }
 }

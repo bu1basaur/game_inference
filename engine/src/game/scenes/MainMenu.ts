@@ -31,7 +31,7 @@ export class MainMenu extends Scene {
         console.log("타이틀 생성");
         // 타이틀
         this.add
-            .text(700, 350, "팔래말래(가제)", {
+            .text(700, 350, "소마소마", {
                 fontFamily: "Kkokkoma",
                 fontSize: "180px",
                 color: "#ffffff",

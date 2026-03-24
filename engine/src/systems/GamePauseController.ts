@@ -23,6 +23,16 @@ export class GamePauseController {
         this.isPaused ? this.resume() : this.pause();
     }
 
+    /** 팝업 열릴 때 - 씬 정지 */
+    pauseForPopup() {
+        this.scene.scene.pause();
+    }
+
+    /** 팝업 닫히면 - 씬 재개 */
+    resumeForPopup() {
+        this.scene.scene.resume();
+    }
+
     get paused() {
         return this.isPaused;
     }

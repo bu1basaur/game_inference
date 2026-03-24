@@ -1,6 +1,4 @@
 import { Game } from "../scenes/Game";
-import { BirdPoo } from "../objects/BirdPoo";
-import { Trash } from "../objects/Trash";
 import { TIMELINE_EVENTS } from "../data/Timeline";
 
 export class GameDebugger {
@@ -28,16 +26,6 @@ export class GameDebugger {
     }
 
     private runSideEffectsOnly(eventKey: string) {
-        if (eventKey === "scene_open") {
-            this.game.poo = new BirdPoo(this.game);
-            this.game.poo.show();
-        }
-        if (eventKey === "fly_add") {
-            this.game.poo?.addFly();
-        }
-        if (eventKey === "scene_homeless") {
-            this.game.trash = new Trash(this.game);
-            this.game.trash.show(700, 650);
-        }
+        this.game.timelineHandler.handle(eventKey);
     }
 }

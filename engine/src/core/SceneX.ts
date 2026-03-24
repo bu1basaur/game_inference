@@ -1,6 +1,4 @@
 import Phaser from "phaser";
-import { BaseComponent, mixin } from "./BaseComponent";
-
 import { AssetManifest } from "../types/Types";
 
 export class SceneX extends Phaser.Scene {
@@ -76,6 +74,3 @@ export class SceneX extends Phaser.Scene {
         return new Promise((resolve) => setTimeout(resolve, $ms));
     }
 }
-
-export interface SceneX extends BaseComponent {}
-mixin(SceneX, BaseComponent);

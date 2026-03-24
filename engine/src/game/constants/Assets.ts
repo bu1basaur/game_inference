@@ -32,6 +32,8 @@ export const GAME_ASSETS: AssetManifest = {
             note_4: "note_4",
             note_5: "note_5",
             note_6: "note_6",
+            loop_on: "loop_on",
+            loop_off: "loop_off",
         },
     },
     spine: {

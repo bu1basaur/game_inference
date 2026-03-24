@@ -1,6 +1,8 @@
 import BBCodeText from "phaser3-rex-plugins/plugins/bbcodetext";
 import { Dialogue } from "./Dialogue";
 import { StoryStep } from "./StoryManager";
+import { EventBus } from "../events/EventBus";
+import { GAME_EVT } from "../events/GameEvt";
 
 type BBCodeTextType = InstanceType<typeof BBCodeText>;
 
@@ -15,7 +17,12 @@ export class DialogueManager {
 
     private choiceButtons: BBCodeTextType[] = [];
 
+    private autoMode: boolean = true; // 다이얼로그 자동 넘김 모드 설정
+    private autoToggleBtn: Phaser.GameObjects.Image;
+
     private autoNextTimer?: Phaser.Time.TimerEvent;
+
+    private dialogueComplete?: () => void;
 
     constructor(scene: Phaser.Scene) {
         this.scene = scene;
@@ -67,6 +74,39 @@ export class DialogueManager {
             this.dialogueText,
             this.dialogueBox
         );
+
+        // 자동 넘김 토글 버튼
+        this.autoToggleBtn = this.scene.add
+            .image(1800, 850, "loop_on")
+            .setInteractive({ useHandCursor: true })
+            .setDepth(DEPTH)
+            .setScale(0.5, 0.5)
+            .setVisible(false);
+
+        this.autoToggleBtn.on("pointerdown", () => {
+            this.autoMode = !this.autoMode;
+            this.autoToggleBtn.setTexture(
+                this.autoMode ? "loop_on" : "loop_off"
+            );
+
+            // 수동 -> 자동 전환 시 대기 중인 콜백 있으면 바로 적용
+            if (this.autoMode && this.dialogueComplete) {
+                EventBus.emit(GAME_EVT.DIALOGUE_RESUME);
+
+                this.autoNextTimer = this.scene.time.delayedCall(2000, () => {
+                    const callback = this.dialogueComplete;
+                    this.dialogueComplete = undefined;
+                    this.dialogueBox.off("pointerdown");
+                    callback?.();
+                });
+            }
+
+            // 자동 -> 수동 전환 시 타이머 취소
+            if (!this.autoMode && this.autoNextTimer) {
+                this.autoNextTimer.remove(false);
+                this.autoNextTimer = undefined;
+            }
+        });
     }
 
     /** 대화창 보여주기 */
@@ -83,23 +123,35 @@ export class DialogueManager {
         this.typewriter.play(step.text, {
             speed: 40,
             onComplete: () => {
-                if (autoNext) {
-                    // 대사 끝나고 2초 후 자동 넘김
+                // 선택지 있는 경우 즉시 onComplete (선택지 표시)
+                if (!autoNext) {
+                    onComplete?.();
+                    return;
+                }
+
+                // 콜백 저장
+                this.dialogueComplete = onComplete;
+
+                // 수동이든 자동이든 클릭하면 넘어감
+                this.dialogueBox.once("pointerdown", () => {
+                    this.dialogueComplete = undefined;
+                    onComplete?.();
+                });
+
+                // 자동 모드면 타이머도 시작
+                if (this.autoMode) {
                     this.autoNextTimer = this.scene.time.delayedCall(
                         2000,
                         () => {
+                            this.dialogueComplete = undefined;
+                            this.dialogueBox.off("pointerdown");
                             onComplete?.();
                         }
                     );
-
-                    // 화면 클릭시에도 대사 넘어감
-                    this.dialogueBox.once("pointerdown", () => {
-                        this.autoNextTimer?.remove(false);
-                        this.autoNextTimer = undefined;
-                        onComplete?.();
-                    });
                 } else {
-                    onComplete?.();
+                    // 수동 모드 - 클릭 대기 중 시간 정지
+                    console.log("로직 확인");
+                    EventBus.emit(GAME_EVT.DIALOGUE_WAITING);
                 }
             },
         });
@@ -109,6 +161,7 @@ export class DialogueManager {
     clearAutoNext() {
         this.autoNextTimer?.remove(false);
         this.autoNextTimer = undefined;
+        this.dialogueComplete = undefined;
         this.dialogueBox.off("pointerdown");
     }
 
@@ -119,6 +172,7 @@ export class DialogueManager {
         this.speakerBox.setVisible(visible);
         this.speakerText.setVisible(visible);
         this.dialogueText.setVisible(visible);
+        this.autoToggleBtn.setVisible(visible);
     }
 
     /** 대화창 하단 y값 반환 */

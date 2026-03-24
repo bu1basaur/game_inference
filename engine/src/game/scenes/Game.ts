@@ -63,6 +63,19 @@ export class Game extends Scene {
         );
         EventBus.on(GAME_EVT.RESUME, this.resumeGame, this);
 
+        // 다이얼로그 이벤트 수신
+        EventBus.on(
+            GAME_EVT.DIALOGUE_WAITING,
+            () => this.timelineManager.pause(),
+            this
+        );
+
+        EventBus.on(
+            GAME_EVT.DIALOGUE_RESUME,
+            () => this.timelineManager.slowDown(),
+            this
+        );
+
         // 원하는 씬부터 테스트
         // this.test("scene_homeless", 7, 30, true);
     }
@@ -118,6 +131,8 @@ export class Game extends Scene {
 
     /** 다음 스토리 진행 */
     public advanceStory() {
+        this.timelineManager.slowDown();
+
         const step = this.storyManager.next();
 
         if (!step) {

@@ -1,6 +1,4 @@
-import { EventBus } from "../../events/EventBus";
 import { Scene } from "phaser";
-import { GAME_EVT } from "../../events/GameEvt";
 
 import { StoryManager } from "../../systems/StoryManager";
 import { DialogueManager } from "../../systems/DialogueManager";
@@ -8,21 +6,23 @@ import { TimelineManager } from "../../systems/TimelineManager";
 
 import { TIMELINE_EVENTS } from "../data/Timeline";
 import { ClockDisplay } from "../../systems/ClockDisplay";
-import { CHARACTERS } from "../data/Characters";
 import { CharacterManager } from "../../systems/CharacterManager";
-
-import { BirdPoo } from "../objects/BirdPoo";
-import { Trash } from "../objects/Trash";
 
 import { Calculator } from "../objects/Calculator";
 import { Board } from "../objects/Board";
 import { Inventory } from "../objects/Inventory";
 import { Receipt } from "../objects/Receipt";
+import { GameEventHandler } from "../../systems/GameEventHandler";
+import {
+    registerListeners,
+    unregisterListeners,
+} from "../../systems/GameListeners";
+import { GameTimelineHandler } from "../../systems/GameTimelineHandler";
+import { GamePauseController } from "../../systems/GamePauseControl";
 
 export class Game extends Scene {
     // ESC입력 시 일시정지 & 재개
     private escKey!: Phaser.Input.Keyboard.Key;
-    private isPaused = false;
 
     public storyManager!: StoryManager;
     public characterManager: CharacterManager;
@@ -30,8 +30,9 @@ export class Game extends Scene {
     public timelineManager!: TimelineManager;
     public clockDisplay: ClockDisplay;
 
-    public poo?: BirdPoo;
-    public trash?: Trash;
+    private eventHandler: GameEventHandler;
+    private timelineHandler: GameTimelineHandler;
+    private pauseControl: GamePauseController;
 
     constructor() {
         super("Game");
@@ -49,46 +50,29 @@ export class Game extends Scene {
         this.timelineManager = new TimelineManager();
         this.clockDisplay = new ClockDisplay(this);
 
-        this.createObjects();
+        // 게임 이벤트 핸들러 등록
+        this.timelineHandler = new GameTimelineHandler(this);
+        this.pauseControl = new GamePauseController(this);
+        this.eventHandler = new GameEventHandler(
+            this,
+            this.characterManager,
+            this.dialogueManager
+        );
+        registerListeners(this, this.timelineManager);
 
         // 타임라인 이벤트 일괄 등록
         this.timelineManager.registerAll(TIMELINE_EVENTS);
-
-        // 타임라인 이벤트 수신
-        EventBus.on(GAME_EVT.TIMELINE, this.onTimelineEvent, this);
 
         // ESC
         this.escKey = this.input.keyboard!.addKey(
             Phaser.Input.Keyboard.KeyCodes.ESC
         );
-        EventBus.on(GAME_EVT.RESUME, this.resumeGame, this);
 
-        // 다이얼로그 이벤트 수신
-        EventBus.on(
-            GAME_EVT.DIALOGUE_WAITING,
-            () => this.timelineManager.pause(),
-            this
-        );
+        // 게임 내 오브젝트 생성
+        this.createObjects();
 
-        EventBus.on(
-            GAME_EVT.DIALOGUE_RESUME,
-            () => this.timelineManager.slowDown(),
-            this
-        );
-
-        // 원하는 씬부터 테스트
+        // 원하는 씬부터 테스트 - data > Timeline 내부 이벤트 참고 !
         // this.test("scene_homeless", 7, 30, true);
-    }
-
-    private createObjects() {
-        const calculator = new Calculator(this);
-        calculator.show();
-
-        const board = new Board(this);
-        board.show();
-
-        new Inventory(this);
-        new Receipt(this);
     }
 
     update(_: number, delta: number) {
@@ -102,31 +86,30 @@ export class Game extends Scene {
 
         // ESC 체크
         if (Phaser.Input.Keyboard.JustDown(this.escKey)) {
-            this.isPaused ? this.resumeGame() : this.pauseGame();
+            this.pauseControl.toggle();
         }
     }
 
-    /** 타임라인에 맞는 이벤트 필요시 호출 */
-    private onTimelineEvent(eventKey: string) {
-        if (eventKey === "scene_open") {
-            this.poo = new BirdPoo(this);
-            this.poo.show();
-        }
+    /** 게임 오브젝트 생성 */
+    private createObjects() {
+        const calculator = new Calculator(this);
+        calculator.show();
 
-        if (eventKey === "fly_add") {
-            this.poo?.addFly();
-            return;
-        }
+        const board = new Board(this);
+        board.show();
 
-        // 영업 종료 처리
-        if (eventKey === "shop_close") {
-            return;
-        }
-        console.log("이벤트키: " + eventKey);
+        new Inventory(this);
+        new Receipt(this);
+    }
 
-        this.storyManager.jumpTo(eventKey);
-        this.timelineManager.slowDown();
-        this.advanceStory();
+    /** 타임라인 이벤트 발생 */
+    public onTimelineEvent(eventkey: string) {
+        this.timelineHandler.handle(eventkey);
+    }
+
+    /** 게임 재개 */
+    public resumeGame() {
+        this.pauseControl.resume();
     }
 
     /** 다음 스토리 진행 */
@@ -142,7 +125,7 @@ export class Game extends Scene {
         }
 
         // 이벤트 처리
-        this.handleEvents(step.events).then(() => {
+        this.eventHandler.handleAll(step.events).then(() => {
             if (!step.text && step.choices.length === 0) {
                 this.advanceStory();
                 return;
@@ -189,88 +172,12 @@ export class Game extends Scene {
         });
     }
 
-    /** 이벤트 배열 순차 처리 */
-    private async handleEvents(events: string[]): Promise<void> {
-        for (const evt of events) {
-            await this.handleEvent(evt);
-        }
-    }
-
-    /** 대화 중 이벤트 처리 메서드 */
-    private async handleEvent(event: string): Promise<void> {
-        const [type, ...args] = event.split(":");
-
-        switch (type) {
-            // 캐릭터
-            case "char_enter": {
-                const [id] = args;
-                const config = CHARACTERS[id];
-                if (config) await this.characterManager.enter(id, config);
-                break;
-            }
-            case "char_exit": {
-                const [id] = args;
-                this.dialogueManager.setVisible(false);
-                if (id === "homeless") {
-                    const trash = new Trash(this);
-                    trash.show(700, 650);
-                }
-                await this.characterManager.exit(id);
-                break;
-            }
-            case "char_anim": {
-                const [id, anim, loopStr] = args;
-                const loop = loopStr !== "false";
-                this.characterManager.setAnim(id, anim, loop);
-                break;
-            }
-
-            // 효과음
-            case "sfx_bell":
-                // this.sound.play("bell");
-                console.log("효과음: 벨");
-                break;
-            case "sfx_radio":
-                // this.sound.play("radio");
-                console.log("효과음: 라디오");
-                break;
-
-            // 배경 전환
-            case "bg_change":
-                // this.background.setTexture(...)
-                console.log("배경 전환");
-                break;
-
-            default:
-                console.warn("알 수 없는 이벤트:", event);
-                break;
-        }
-    }
-
-    private pauseGame() {
-        this.isPaused = true;
-
-        // Spine 애니메이션 포함 모든 씬 일시정지
-        this.scene.pause();
-
-        // 오디오 일시정지
-        // this.sound.pauseAll();
-
-        // React에 알림
-        EventBus.emit(GAME_EVT.PAUSE);
-    }
-
-    private resumeGame() {
-        this.isPaused = false;
-        this.scene.resume();
-        this.sound.resumeAll();
-        EventBus.emit(GAME_EVT.RESUMED);
-    }
-
+    /** 모든 게임 이벤트 제거 */
     shutdown() {
-        EventBus.off(GAME_EVT.RESUME, this.resumeGame, this);
+        unregisterListeners(this);
     }
 
+    /** 씬 전환 */
     changeScene() {
         this.scene.start("GameOver");
     }

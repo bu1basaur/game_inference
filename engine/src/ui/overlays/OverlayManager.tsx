@@ -3,6 +3,7 @@ import BoardOverlay from "./BoardOverlay";
 import InventoryOverlay from "./InventoryOverlay";
 import CalculatorOverlay from "./CalculatorOverlay";
 import ReceiptOverlay from "./ReceiptOverlay";
+import NoteOverlay from "./NoteOverlay";
 
 const OverlayManager = () => {
     const { overlay } = useOverlayStore();
@@ -13,6 +14,7 @@ const OverlayManager = () => {
             {overlay === "inventory" && <InventoryOverlay />}
             {overlay === "calculator" && <CalculatorOverlay />}
             {overlay === "receipt" && <ReceiptOverlay />}
+            {overlay === "note" && <NoteOverlay />}
         </>
     );
 };

@@ -1,5 +1,6 @@
 import { Game } from "../scenes/Game";
 import { TIMELINE_EVENTS } from "../data/Timeline";
+import { Trash } from "../objects/Trash";
 
 export class GameDebugger {
     constructor(private game: Game) {}
@@ -26,6 +27,12 @@ export class GameDebugger {
     }
 
     private runSideEffectsOnly(eventKey: string) {
-        this.game.timelineHandler.handle(eventKey);
+        this.game.timelineHandler.applySideEffects(eventKey);
+
+        // 노숙자가 다녀간 상태 → trash 배치 (디버그 전용)
+        if (eventKey === "scene_homeless") {
+            const trash = new Trash(this.game);
+            trash.show(700, 650);
+        }
     }
 }

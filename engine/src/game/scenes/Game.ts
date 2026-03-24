@@ -5,7 +5,7 @@ import { DialogueManager } from "../../systems/DialogueManager";
 import { TimelineManager } from "../../systems/TimelineManager";
 
 import { TIMELINE_EVENTS } from "../data/Timeline";
-import { ClockDisplay } from "../../systems/ClockDisplay";
+import { ClockDisplay } from "../objects/ClockDisplay";
 import { CharacterManager } from "../../systems/CharacterManager";
 
 import { Calculator } from "../objects/Calculator";
@@ -74,7 +74,7 @@ export class Game extends Scene {
         this.createObjects();
 
         // 원하는 씬부터 테스트 - data > Timeline 내부 이벤트 참고 !
-        // this.test("scene_homeless", 7, 30, true);
+        this.test("scene_radio_news", 8, 0, true);
     }
 
     update(_: number, delta: number) {

@@ -18,29 +18,20 @@ export class Trash {
             .setInteractive({ useHandCursor: true })
             .setDepth(10);
 
-        this.trash.on("pointerdown", () => this.openNote());
+        this.trash.on("pointerdown", () => {
+            // EventBus.emit(GAME_EVT.POPUP_OPEN);
+            this.openNote();
+        });
     }
 
     /** 쪽지 표시 */
     private openNote() {
         this.trash?.destroy();
-        EventBus.emit(GAME_EVT.OPEN_NOTE);
 
         const noteIndex = Phaser.Math.Between(1, 6);
-        this.note = this.scene.add
-            .image(
-                this.scene.scale.width / 2,
-                this.scene.scale.height / 2,
-                `note_${noteIndex}`
-            )
-            .setDepth(200)
-            .setInteractive({ useHandCursor: true });
-
-        // 쪽지 클릭하면 닫기
-        this.note.on("pointerdown", () => {
-            this.note?.destroy();
-            EventBus.emit(GAME_EVT.CLOSE_NOTE);
-        });
+        const imageKey = `note_${noteIndex}`;
+        EventBus.emit(GAME_EVT.POPUP_OPEN);
+        EventBus.emit(GAME_EVT.NOTE_OPEN, { imageKey });
     }
 
     destroy() {

@@ -86,3 +86,11 @@
     border-radius: 4px;
     user-select: none;
 }
+
+/* note */
+
+.note-display {
+    cursor: pointer;
+    width: auto;
+    height: auto;
+}

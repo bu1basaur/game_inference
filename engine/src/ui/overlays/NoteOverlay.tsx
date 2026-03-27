@@ -1,11 +1,9 @@
 import { useOverlayStore } from "../../stores/useOverlayStore";
 import { EventBus } from "../../events/EventBus";
 import { GAME_EVT } from "../../events/GameEvt";
-import "../styles/overlay.css";
 
 const NoteOverlay = () => {
     const { closeOverlay, overlayData } = useOverlayStore();
-    console.log(overlayData?.imageKey);
 
     const handleClose = () => {
         closeOverlay();
@@ -13,9 +11,9 @@ const NoteOverlay = () => {
     };
 
     return (
-        <div className="overlay-bg">
+        <div className="overlay-backdrop">
             <img
-                className="note-display"
+                className="note-img"
                 src={`/assets/game/images/${overlayData?.imageKey}.png`}
                 onClick={handleClose}
             />

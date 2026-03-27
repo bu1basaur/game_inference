@@ -8,6 +8,7 @@ export type SavedNote = {
 interface NoteState {
     notes: SavedNote[];
     addNote: (note: Omit<SavedNote, "id">) => void;
+    setNotes: (notes: SavedNote[]) => void;
 }
 
 export const useNoteStore = create<NoteState>((set) => ({
@@ -16,4 +17,5 @@ export const useNoteStore = create<NoteState>((set) => ({
         set((state) => ({
             notes: [...state.notes, { ...note, id: state.notes.length + 1 }],
         })),
+    setNotes: (notes) => set({ notes }),
 }));

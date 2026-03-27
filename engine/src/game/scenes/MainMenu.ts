@@ -4,7 +4,7 @@ import { GAME_EVT } from "../../events/GameEvt";
 
 const MENU_ITEMS = [
     { label: "게임 시작", action: "start", x: 80, y: 690 },
-    { label: "불러오기", action: "start", x: 80, y: 780 },
+    { label: "불러오기", action: "load", x: 80, y: 780 },
     { label: "옵션", action: "option", x: 80, y: 870 },
     { label: "나가기", action: "exit", x: 80, y: 960 },
 
@@ -78,13 +78,15 @@ export class MainMenu extends Scene {
             case "start":
                 this.scene.start("Preloader");
                 break;
+            case "load":
+                EventBus.once(GAME_EVT.LOAD_READY, () => {
+                    this.scene.start("Preloader");
+                });
+                EventBus.emit(GAME_EVT.OPEN_LOAD_OVERLAY);
+                break;
             case "option":
-                // 추후 옵션창 추가
-                // EventBus.emit(GAME_EVT.OPEN_OPTION);
                 break;
             case "exit":
-                // 게임 종료 처리
-                // EventBus.emit(GAME_EVT.EXIT);
                 break;
         }
     }

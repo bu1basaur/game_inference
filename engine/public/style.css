@@ -60,7 +60,6 @@ body {
         background-color: #0ec3c9;
     }
 
-    /* Disabled styles */
     &:disabled {
         cursor: not-allowed;
         border: 1px solid rgba(255, 255, 255, 0.3);
@@ -68,7 +67,7 @@ body {
     }
 }
 
-/* Pause Overlay */
+/* ── Pause Overlay ── */
 .pause-overlay {
     position: fixed;
     inset: 0;
@@ -78,45 +77,88 @@ body {
     justify-content: center;
     align-items: center;
     gap: 24px;
-    backdrop-filter: blur(8px);
-    background-color: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(12px);
+    background: rgba(0,0,0,0.45);
 }
 
 .pause-title {
     padding: 10px;
-    font-family: "Bunpil";
     font-size: 4.5rem;
     font-weight: bold;
+    color: rgba(255,255,255,0.9);
+    font-family: Bunpil;
     letter-spacing: 0.2em;
-    text-indent: 0.2em;
-    color: rgba(255, 255, 255, 0.87);
-    text-shadow: 0 0 20px rgba(14, 195, 201, 0.6);
+    text-shadow: 0 0 20px rgba(14,195,201,0.6);
 }
 
-.pause-resume-btn {
-    color: rgba(255, 255, 255, 0.87);
-    background: none;
+.pause-btn {
+    background: transparent;
     border: none;
     cursor: pointer;
-    transition: all 0.3s;
-    font-family: "Bunpil", Arial, Helvetica, sans-serif;
     font-size: 3rem;
-
-    &:hover {
-        color: #0ec3c9;
-    }
+    color: rgba(255,255,255,0.9);
+    font-family: Bunpil;
+    transition: color 0.3s;
 }
+.pause-btn:hover { color: #0ec3c9; }
+.pause-btn.exit:hover { color: #c91b0e; }
 
-.pause-exit-btn {
-    color: rgba(255, 255, 255, 0.87);
-    background: none;
-    border: none;
+/* ── Save Button ── */
+.save-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: 2px solid white;
+    font-size: 14px;
     cursor: pointer;
-    transition: all 0.3s;
-    font-family: "Bunpil", Arial, Helvetica, sans-serif;
-    font-size: 3rem;
-
-    &:hover {
-        color: #c91b0e;
-    }
+    z-index: 100;
 }
+.save-btn:hover { background: rgba(0,0,0,0.7); }
+.save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Login Panel ── */
+.login-panel {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+}
+
+.login-greeting {
+    color: white;
+    font-size: 18px;
+}
+
+.login-change {
+    color: #aaa;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.login-input {
+    padding: 8px 12px;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    font-size: 16px;
+    outline: none;
+    width: 180px;
+}
+.login-input::placeholder { color: rgba(255,255,255,0.5); }
+
+.login-confirm-btn {
+    padding: 8px 16px;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    font-size: 16px;
+    cursor: pointer;
+}
+.login-confirm-btn:hover { background: rgba(255,255,255,0.1); }

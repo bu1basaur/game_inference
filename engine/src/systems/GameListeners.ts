@@ -2,11 +2,29 @@ import { Game } from "./../game/scenes/Game";
 import { TimelineManager } from "./TimelineManager";
 import { EventBus } from "../events/EventBus";
 import { GAME_EVT } from "../events/GameEvt";
+import { SaveManager } from "./SaveManager";
 
 export function registerListeners(
     game: Game,
     timelineManager: TimelineManager
 ) {
+    const saveManager = new SaveManager(game.storyManager, timelineManager);
+
+    EventBus.on(
+        GAME_EVT.SAVE,
+        () => {
+            saveManager
+                .save()
+                .then(() =>
+                    EventBus.emit(GAME_EVT.SAVE_RESULT, { success: true })
+                )
+                .catch(() =>
+                    EventBus.emit(GAME_EVT.SAVE_RESULT, { success: false })
+                );
+        },
+        game
+    );
+
     // 이벤트 키에 맞는 타임라인 이벤트 발생
     EventBus.on(
         GAME_EVT.TIMELINE,
@@ -57,4 +75,5 @@ export function unregisterListeners(game: Game) {
     EventBus.off(GAME_EVT.POPUP_OPEN, undefined, game);
     EventBus.off(GAME_EVT.POPUP_CLOSE, undefined, game);
     EventBus.off(GAME_EVT.GOTO_MAIN, undefined, game);
+    EventBus.off(GAME_EVT.SAVE, undefined, game);
 }

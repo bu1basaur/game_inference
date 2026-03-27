@@ -1,5 +1,6 @@
 import { Scene } from "phaser";
 import { EventBus } from "../../events/EventBus";
+import { GAME_EVT } from "../../events/GameEvt";
 
 export class Inventory {
     constructor(scene: Scene) {
@@ -8,6 +9,7 @@ export class Inventory {
         btn.setInteractive();
 
         btn.on("pointerdown", () => {
+            EventBus.emit(GAME_EVT.POPUP_OPEN);
             EventBus.emit("OPEN_INVENTORY");
         });
 

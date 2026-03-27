@@ -12,6 +12,8 @@ import { Calculator } from "../objects/Calculator";
 import { Board } from "../objects/Board";
 import { Inventory } from "../objects/Inventory";
 import { Receipt } from "../objects/Receipt";
+import { Notebook } from "../objects/Notebook";
+import { WorkLog } from "../objects/WorkLog";
 import { GameEventHandler } from "../../systems/GameEventHandler";
 import {
     registerListeners,
@@ -21,6 +23,9 @@ import { GameTimelineHandler } from "../../systems/GameTimelineHandler";
 import { GamePauseController } from "../../systems/GamePauseController";
 import { EventBus } from "../../events/EventBus";
 import { GAME_EVT } from "../../events/GameEvt";
+import { useSaveStore } from "../../stores/useSaveStore";
+import { useNoteStore } from "../../stores/useNoteStore";
+import { useAuthStore } from "../../stores/useAuthStore";
 
 export class Game extends Scene {
     // ESC입력 시 일시정지 & 재개
@@ -73,6 +78,11 @@ export class Game extends Scene {
         // 게임 내 오브젝트 생성
         this.createObjects();
 
+        // 불러오기 데이터가 있으면 복원
+        this.applyPendingLoad();
+
+        EventBus.emit(GAME_EVT.SCENE_READY, this);
+
         // 원하는 씬부터 테스트 - data > Timeline 내부 이벤트 참고 !
         this.test("scene_radio_news", 8, 0, true);
     }
@@ -102,6 +112,8 @@ export class Game extends Scene {
 
         new Inventory(this);
         new Receipt(this);
+        new Notebook(this);
+        new WorkLog(this);
     }
 
     /** 타임라인 이벤트 발생 */
@@ -172,6 +184,29 @@ export class Game extends Scene {
             // 텍스트도 선택지도 없고 이벤트만 있는 경우 → 자동으로 다음으로
             this.advanceStory();
         });
+    }
+
+    /** 저장 데이터 복원 */
+    private applyPendingLoad() {
+        const save = useSaveStore.getState().pendingLoad;
+        if (!save) return;
+
+        this.storyManager.loadStateJson(save.storyState);
+        this.timelineManager.restoreSnapshot(save.timelineMinutes);
+        useNoteStore.getState().setNotes(save.notes);
+        if (save.playerName) {
+            useAuthStore.getState().setName(save.playerName);
+        }
+
+        useSaveStore.getState().clearPendingLoad();
+
+        console.log("=== 불러오기 완료 ===");
+        console.log("플레이어:", save.playerName ?? "(없음)");
+        console.log(
+            "게임 시간:",
+            `${Math.floor(save.timelineMinutes / 60)}:${String(Math.round(save.timelineMinutes % 60)).padStart(2, "0")}`
+        );
+        console.log("수집 쪽지:", save.notes.length, "개");
     }
 
     /** 모든 게임 이벤트 제거 */

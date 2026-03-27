@@ -106,6 +106,21 @@ export class TimelineManager {
         )}`;
     }
 
+    /** 현재 진행 상태 스냅샷 반환 */
+    getSnapshot(): { currentMinutes: number } {
+        return { currentMinutes: this.currentMinutes };
+    }
+
+    /** 저장된 스냅샷으로 복원 (과거 이벤트는 triggered 처리) */
+    restoreSnapshot(currentMinutes: number): void {
+        this.currentMinutes = currentMinutes;
+        this.events.forEach((e) => {
+            if (e.hour * 60 + e.minute <= currentMinutes) {
+                e.triggered = true;
+            }
+        });
+    }
+
     /** 테스트용 - 시간 강제 설정 */
     setTime(hour: number, minute: number = 0) {
         this.currentMinutes = hour * 60 + minute;

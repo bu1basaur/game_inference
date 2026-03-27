@@ -53,7 +53,7 @@ export class Boot extends Scene {
 
     /** 씬 시작 */
     private sceneStart() {
-        // this.scene.start("MainMenu");
-        this.scene.start("Preloader");
+        this.scene.start("MainMenu");
+        // this.scene.start("Preloader");
     }
 }

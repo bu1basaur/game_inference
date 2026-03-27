@@ -1,4 +1,5 @@
 import { EventBus } from "../../events/EventBus";
+import { GAME_EVT } from "../../events/GameEvt";
 
 export class Board {
     private scene: Phaser.Scene;
@@ -19,6 +20,7 @@ export class Board {
         btn.setInteractive({ useHandCursor: true });
 
         btn.on("pointerdown", () => {
+            EventBus.emit(GAME_EVT.POPUP_OPEN);
             EventBus.emit("OPEN_BOARD");
         });
     }

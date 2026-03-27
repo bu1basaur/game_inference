@@ -6,6 +6,9 @@ type OverlayType =
     | "board"
     | "receipt"
     | "note"
+    | "load"
+    | "notebook"
+    | "worklog"
     | null;
 
 export interface OverlayData {

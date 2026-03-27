@@ -1,4 +1,5 @@
 import { EventBus } from "../../events/EventBus";
+import { GAME_EVT } from "../../events/GameEvt";
 
 export class Calculator {
     private scene: Phaser.Scene;
@@ -19,6 +20,7 @@ export class Calculator {
         btn.setInteractive();
 
         btn.on("pointerdown", () => {
+            EventBus.emit(GAME_EVT.POPUP_OPEN);
             EventBus.emit("OPEN_CALCULATOR");
         });
     }

@@ -83,4 +83,12 @@ export class StoryManager {
     jumpTo(knot: string): void {
         this.story.ChoosePathString(knot);
     }
+
+    getStateJson(): string {
+        return this.story.state.ToJson();
+    }
+
+    loadStateJson(json: string): void {
+        this.story.state.LoadJson(json);
+    }
 }

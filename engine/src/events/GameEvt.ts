@@ -29,6 +29,24 @@ export const GAME_EVT = {
     // 쪽지
     NOTE_OPEN: "NOTE_OPEN",
     NOTE_CLOSE: "NOTE_CLOSE",
+
+    // 저장
+    SAVE: "SAVE",
+    SAVE_RESULT: "SAVE_RESULT",
+
+    // 인벤토리
+    INVENTORY_CONFIRM: "INVENTORY_CONFIRM",
+
+    // 근무일지
+    WORKLOG_ADD: "WORKLOG_ADD",
+
+    // 오버레이 열기
+    OPEN_NOTEBOOK: "OPEN_NOTEBOOK",
+    OPEN_WORKLOG: "OPEN_WORKLOG",
+
+    // 불러오기
+    OPEN_LOAD_OVERLAY: "OPEN_LOAD_OVERLAY",
+    LOAD_READY: "LOAD_READY",
 } as const;
 
 export type EventKey = (typeof GAME_EVT)[keyof typeof GAME_EVT];

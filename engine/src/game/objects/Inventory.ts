@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 인벤토리 버튼
+// ──────────────────────────────────────────────────
+
 import { Scene } from "phaser";
 import { EventBus } from "../../events/EventBus";
 import { GAME_EVT } from "../../events/GameEvt";

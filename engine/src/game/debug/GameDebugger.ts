@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 개발용 디버그 도구
+// ──────────────────────────────────────────────────
+
 import { Game } from "../scenes/Game";
 import { TIMELINE_EVENTS } from "../data/Timeline";
 import { Trash } from "../objects/Trash";

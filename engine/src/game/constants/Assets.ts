@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 에셋 키 상수 (텍스처 키, 오디오 키 등)
+// ──────────────────────────────────────────────────
+
 import { AssetManifest } from "../../types/Types";
 
 export const COMMON_ASSETS: AssetManifest = {

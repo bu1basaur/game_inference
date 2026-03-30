@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 루트 컴포넌트 (씬 감지, pause overlay, UI 조건부
+// ──────────────────────────────────────────────────
+
 import { useEffect } from "react";
 import { EventBus } from "./events/EventBus";
 import { GAME_EVT } from "./events/GameEvt";

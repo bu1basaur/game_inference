@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # Firebase 앱 초기화 (env 변수로 설정)
+// ──────────────────────────────────────────────────
+
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {

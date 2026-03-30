@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 메인 게임 씬 (인게임 전체 로직)
+// ──────────────────────────────────────────────────
+
 import { Scene } from "phaser";
 
 import { StoryManager } from "../../systems/StoryManager";
@@ -84,7 +88,7 @@ export class Game extends Scene {
         EventBus.emit(GAME_EVT.SCENE_READY, this);
 
         // 원하는 씬부터 테스트 - data > Timeline 내부 이벤트 참고 !
-        this.test("scene_radio_news", 8, 0, true);
+        // this.test("scene_radio_news", 8, 0, true);
     }
 
     update(_: number, delta: number) {
@@ -204,7 +208,9 @@ export class Game extends Scene {
         console.log("플레이어:", save.playerName ?? "(없음)");
         console.log(
             "게임 시간:",
-            `${Math.floor(save.timelineMinutes / 60)}:${String(Math.round(save.timelineMinutes % 60)).padStart(2, "0")}`
+            `${Math.floor(save.timelineMinutes / 60)}:${String(
+                Math.round(save.timelineMinutes % 60)
+            ).padStart(2, "0")}`
         );
         console.log("수집 쪽지:", save.notes.length, "개");
     }

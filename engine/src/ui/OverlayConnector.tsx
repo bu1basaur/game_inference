@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # EventBus → Zustand 연결 (오버레이 열기 이벤트 수
+// ──────────────────────────────────────────────────
+
 import { useEffect } from "react";
 import { EventBus } from "../events/EventBus";
 import { useOverlayStore, OverlayData } from "../stores/useOverlayStore";
@@ -56,4 +60,3 @@ const OverlayConnector = () => {
 };
 
 export default OverlayConnector;
-

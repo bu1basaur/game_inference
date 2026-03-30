@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # pendingLoad (불러오기 시 Phaser로 전달)
+// ──────────────────────────────────────────────────
+
 import { create } from "zustand";
 import { SaveData } from "../services/SaveService";
 

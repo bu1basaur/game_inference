@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # Phaser 게임 인스턴스를 React에 마운트하는 브릿지
+// ──────────────────────────────────────────────────
+
 import { useLayoutEffect, useRef, useEffect } from "react";
 import { EventBus } from "./events/EventBus";
 import { GAME_EVT } from "./events/GameEvt";

@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 대화창 표시/진행
+// ──────────────────────────────────────────────────
+
 import BBCodeText from "phaser3-rex-plugins/plugins/bbcodetext";
 import { Dialogue } from "./Dialogue";
 import { StoryStep } from "./StoryManager";

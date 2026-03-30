@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 인게임 저장 버튼 (Game 씬일 때만 렌더)
+// ──────────────────────────────────────────────────
+
 import { useEffect, useState } from "react";
 import { EventBus } from "../events/EventBus";
 import { GAME_EVT } from "../events/GameEvt";

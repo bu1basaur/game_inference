@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 현재 오버레이 상태 보고 해당 컴포넌트 렌더
+// ──────────────────────────────────────────────────
+
 import { useOverlayStore } from "../../stores/useOverlayStore";
 import BoardOverlay from "./BoardOverlay";
 import InventoryOverlay from "./InventoryOverlay";

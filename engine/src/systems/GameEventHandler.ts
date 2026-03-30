@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 게임 이벤트 처리 로직
+// ──────────────────────────────────────────────────
+
 import { CHARACTERS } from "../game/data/Characters";
 import { Trash } from "../game/objects/Trash";
 import { CharacterManager } from "./CharacterManager";

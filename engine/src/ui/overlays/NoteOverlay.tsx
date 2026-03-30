@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 쪽지 전체보기
+// ──────────────────────────────────────────────────
+
 import { useOverlayStore } from "../../stores/useOverlayStore";
 import { EventBus } from "../../events/EventBus";
 import { GAME_EVT } from "../../events/GameEvt";

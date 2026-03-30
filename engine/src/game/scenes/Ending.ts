@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 엔딩 씬
+// ──────────────────────────────────────────────────
+
 import { EventBus } from "../../events/EventBus";
 import { Scene } from "phaser";
 import { GAME_EVT } from "../../events/GameEvt";

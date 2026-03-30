@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # uid + 플레이어 이름 (localStorage 동기화)
+// ──────────────────────────────────────────────────
+
 import { create } from "zustand";
 
 const STORAGE_KEY = "player_name";
@@ -18,4 +22,3 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({ name });
     },
 }));
-

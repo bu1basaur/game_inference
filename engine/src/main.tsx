@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 앱 진입점 (React 마운트 + Firebase 초기화)
+// ──────────────────────────────────────────────────
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";

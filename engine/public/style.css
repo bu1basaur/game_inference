@@ -1,3 +1,5 @@
+/* ── 전역 css ── */
+
 html,
 body {
     margin: 0;
@@ -78,17 +80,17 @@ body {
     align-items: center;
     gap: 24px;
     backdrop-filter: blur(12px);
-    background: rgba(0,0,0,0.45);
+    background: rgba(0, 0, 0, 0.45);
 }
 
 .pause-title {
     padding: 10px;
     font-size: 4.5rem;
     font-weight: bold;
-    color: rgba(255,255,255,0.9);
+    color: rgba(255, 255, 255, 0.9);
     font-family: Bunpil;
     letter-spacing: 0.2em;
-    text-shadow: 0 0 20px rgba(14,195,201,0.6);
+    text-shadow: 0 0 20px rgba(14, 195, 201, 0.6);
 }
 
 .pause-btn {
@@ -96,12 +98,16 @@ body {
     border: none;
     cursor: pointer;
     font-size: 3rem;
-    color: rgba(255,255,255,0.9);
+    color: rgba(255, 255, 255, 0.9);
     font-family: Bunpil;
     transition: color 0.3s;
 }
-.pause-btn:hover { color: #0ec3c9; }
-.pause-btn.exit:hover { color: #c91b0e; }
+.pause-btn:hover {
+    color: #0ec3c9;
+}
+.pause-btn.exit:hover {
+    color: #c91b0e;
+}
 
 /* ── Save Button ── */
 .save-btn {
@@ -109,15 +115,20 @@ body {
     top: 20px;
     right: 20px;
     padding: 8px 16px;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     color: white;
     border: 2px solid white;
     font-size: 14px;
     cursor: pointer;
     z-index: 100;
 }
-.save-btn:hover { background: rgba(0,0,0,0.7); }
-.save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.save-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+.save-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 
 /* ── Login Panel ── */
 .login-panel {
@@ -151,7 +162,9 @@ body {
     outline: none;
     width: 180px;
 }
-.login-input::placeholder { color: rgba(255,255,255,0.5); }
+.login-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
 
 .login-confirm-btn {
     padding: 8px 16px;
@@ -161,4 +174,6 @@ body {
     font-size: 16px;
     cursor: pointer;
 }
-.login-confirm-btn:hover { background: rgba(255,255,255,0.1); }
+.login-confirm-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}

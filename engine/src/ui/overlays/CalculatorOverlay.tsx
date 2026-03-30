@@ -1,19 +1,38 @@
+// ──────────────────────────────────────────────────
+// # 계산기
+// ──────────────────────────────────────────────────
+
 import { useState } from "react";
 import { useOverlayStore } from "../../stores/useOverlayStore";
 import { EventBus } from "../../events/EventBus";
 import { GAME_EVT } from "../../events/GameEvt";
 
 const buttons = [
-    "7", "8", "9", "/",
-    "4", "5", "6", "*",
-    "1", "2", "3", "-",
-    "0", ".", "C", "+",
+    "7",
+    "8",
+    "9",
+    "/",
+    "4",
+    "5",
+    "6",
+    "*",
+    "1",
+    "2",
+    "3",
+    "-",
+    "0",
+    ".",
+    "C",
+    "+",
     "=",
 ];
 
 const CalculatorOverlay = () => {
     const { closeOverlay } = useOverlayStore();
-    const handleClose = () => { closeOverlay(); EventBus.emit(GAME_EVT.POPUP_CLOSE); };
+    const handleClose = () => {
+        closeOverlay();
+        EventBus.emit(GAME_EVT.POPUP_CLOSE);
+    };
     const [display, setDisplay] = useState("");
 
     const press = (v: string) => {
@@ -44,7 +63,9 @@ const CalculatorOverlay = () => {
                     {buttons.map((b, i) => (
                         <div
                             key={i}
-                            className={`calc-btn${b === "=" ? " calc-btn-equals" : ""}`}
+                            className={`calc-btn${
+                                b === "=" ? " calc-btn-equals" : ""
+                            }`}
                             onClick={() => press(b)}
                         >
                             {b}
@@ -52,7 +73,9 @@ const CalculatorOverlay = () => {
                     ))}
                 </div>
 
-                <div className="overlay-close-btn" onClick={handleClose}>닫기</div>
+                <div className="overlay-close-btn" onClick={handleClose}>
+                    닫기
+                </div>
             </div>
         </div>
     );

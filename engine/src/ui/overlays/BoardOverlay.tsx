@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 쪽지 게시판
+// ──────────────────────────────────────────────────
+
 import { useState } from "react";
 import { useOverlayStore } from "../../stores/useOverlayStore";
 import { useNoteStore, SavedNote } from "../../stores/useNoteStore";
@@ -7,7 +11,10 @@ import "../../ui/styles/overlay.css";
 
 const BoardOverlay = () => {
     const { closeOverlay } = useOverlayStore();
-    const handleClose = () => { closeOverlay(); EventBus.emit(GAME_EVT.POPUP_CLOSE); };
+    const handleClose = () => {
+        closeOverlay();
+        EventBus.emit(GAME_EVT.POPUP_CLOSE);
+    };
     const notes = useNoteStore((s) => s.notes);
     const [zoomed, setZoomed] = useState<SavedNote | null>(null);
 
@@ -32,11 +39,16 @@ const BoardOverlay = () => {
                     </div>
                 )}
 
-                <div className="overlay-close-btn" onClick={handleClose}>닫기</div>
+                <div className="overlay-close-btn" onClick={handleClose}>
+                    닫기
+                </div>
             </div>
 
             {zoomed && (
-                <div className="board-zoom-backdrop" onClick={() => setZoomed(null)}>
+                <div
+                    className="board-zoom-backdrop"
+                    onClick={() => setZoomed(null)}
+                >
                     <img
                         className="board-zoom-img"
                         src={`/assets/game/images/${zoomed.imageKey}.png`}

@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # Firestore CRUD (저장/불러오기/목록/10개 트림)
+// ──────────────────────────────────────────────────
+
 import {
     collection,
     addDoc,
@@ -27,8 +31,7 @@ export type SaveSlot = SaveData & {
 
 const MAX_SLOTS = 10;
 
-const slotsRef = (userId: string) =>
-    collection(db, "saves", userId, "slots");
+const slotsRef = (userId: string) => collection(db, "saves", userId, "slots");
 
 export async function saveGame(userId: string, data: SaveData): Promise<void> {
     const ref = slotsRef(userId);

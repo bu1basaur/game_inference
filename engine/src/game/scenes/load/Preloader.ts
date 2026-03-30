@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 게임 진행을 위한 에셋 프리로드 씬
+// ──────────────────────────────────────────────────
+
 import { SceneX } from "../../../core/SceneX";
 import { COMMON_ASSETS, GAME_ASSETS } from "../../constants/Assets";
 

@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 익명 인증 + onAuthStateChanged + ensureSignedIn()
+// ──────────────────────────────────────────────────
+
 import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import { app } from "./config";
 import { useAuthStore } from "../stores/useAuthStore";

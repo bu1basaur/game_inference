@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 게임 상태 수집 후 SaveService 호출
+// ──────────────────────────────────────────────────
+
 import { StoryManager } from "./StoryManager";
 import { TimelineManager } from "./TimelineManager";
 import { useNoteStore } from "../stores/useNoteStore";

@@ -1,8 +1,12 @@
+// ──────────────────────────────────────────────────
+// # 근무일지 항목 목록
+// ──────────────────────────────────────────────────
+
 import { create } from "zustand";
 
 export type WorkLogEntry = {
     id: number;
-    time: string;   // "HH:MM" 형식
+    time: string; // "HH:MM" 형식
     content: string;
 };
 

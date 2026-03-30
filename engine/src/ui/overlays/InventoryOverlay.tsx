@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 인벤토리
+// ──────────────────────────────────────────────────
+
 import { useState } from "react";
 import { useOverlayStore } from "../../stores/useOverlayStore";
 import { EventBus } from "../../events/EventBus";
@@ -24,7 +28,9 @@ const InventoryOverlay = () => {
 
     const handleConfirm = () => {
         if (selected !== null) {
-            console.log(`[인벤토리] 확인 - index: ${selected}, item: ${items[selected]}`);
+            console.log(
+                `[인벤토리] 확인 - index: ${selected}, item: ${items[selected]}`
+            );
             EventBus.emit(GAME_EVT.INVENTORY_CONFIRM, {
                 index: selected,
                 item: items[selected],
@@ -126,4 +132,3 @@ const InventoryOverlay = () => {
 };
 
 export default InventoryOverlay;
-

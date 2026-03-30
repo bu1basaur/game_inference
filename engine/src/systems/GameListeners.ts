@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # EventBus 이벤트 수신
+// ──────────────────────────────────────────────────
+
 import { Game } from "./../game/scenes/Game";
 import { TimelineManager } from "./TimelineManager";
 import { EventBus } from "../events/EventBus";
@@ -55,6 +59,7 @@ export function registerListeners(
         game
     );
 
+    // 오버레이 팝업 여닫기
     EventBus.on(
         GAME_EVT.POPUP_OPEN,
         () => game.pauseControl.pauseForPopup(),

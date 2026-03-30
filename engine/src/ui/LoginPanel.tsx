@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 이름 입력 패널 (MainMenu 씬일 때만 렌더)
+// ──────────────────────────────────────────────────
+
 import { useState } from "react";
 import { useAuthStore } from "../stores/useAuthStore";
 

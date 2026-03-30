@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 새똥 오브젝트
+// ──────────────────────────────────────────────────
+
 export class BirdPoo {
     private scene: Phaser.Scene;
     private poo?: Phaser.GameObjects.Image;

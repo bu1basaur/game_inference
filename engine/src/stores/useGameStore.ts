@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+//  # 게임 전반 상태 관리 (isPaused + currentScene)
+// ──────────────────────────────────────────────────
+
 import { create } from "zustand";
 
 interface GameState {

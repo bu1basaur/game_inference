@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 게임 내 시간 흐름 + 이벤트 트리거
+// ──────────────────────────────────────────────────
+
 import { EventBus } from "../events/EventBus";
 import { GAME_EVT } from "../events/GameEvt";
 import { TimelineEntry } from "../game/data/Timeline";

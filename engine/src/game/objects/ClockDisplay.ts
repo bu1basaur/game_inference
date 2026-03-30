@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 게임 내 시계 UI
+// ──────────────────────────────────────────────────
+
 export class ClockDisplay {
     private scene: Phaser.Scene;
     private clockFace: Phaser.GameObjects.Image;

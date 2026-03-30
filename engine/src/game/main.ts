@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # Phaser 게임 설정 (씬 목록, 해상도 등)
+// ──────────────────────────────────────────────────
+
 import { SpinePlugin } from "@esotericsoftware/spine-phaser-v3";
 import { Boot } from "./scenes/load/Boot";
 import { Ending } from "./scenes/Ending";
@@ -6,8 +10,6 @@ import { MainMenu } from "./scenes/MainMenu";
 import { AUTO, Game } from "phaser";
 import { Preloader } from "./scenes/load/Preloader";
 
-//  Find out more information about the Game Config at:
-//  https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
 const config: Phaser.Types.Core.GameConfig = {
     type: AUTO,
     width: 1920,

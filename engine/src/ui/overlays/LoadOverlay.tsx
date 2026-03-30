@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 불러오기 (저장 슬롯 목록)
+// ──────────────────────────────────────────────────
+
 import { useEffect, useState } from "react";
 import { useOverlayStore } from "../../stores/useOverlayStore";
 import { useSaveStore } from "../../stores/useSaveStore";
@@ -42,9 +46,9 @@ const LoadOverlay = () => {
                 saves.forEach((s, i) => {
                     console.log(
                         `[${i + 1}] ${formatDate(s)} | ` +
-                        `플레이어: ${s.playerName ?? "없음"} | ` +
-                        `시간: ${formatGameTime(s.timelineMinutes)} | ` +
-                        `쪽지: ${s.notes.length}개`
+                            `플레이어: ${s.playerName ?? "없음"} | ` +
+                            `시간: ${formatGameTime(s.timelineMinutes)} | ` +
+                            `쪽지: ${s.notes.length}개`
                     );
                 });
             } catch (e) {
@@ -81,7 +85,16 @@ const LoadOverlay = () => {
 
     return (
         <div className="overlay-backdrop">
-            <div className="overlay-panel-dark" style={{ width: 640, padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+            <div
+                className="overlay-panel-dark"
+                style={{
+                    width: 640,
+                    padding: 24,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 16,
+                }}
+            >
                 <div className="load-title">불러오기</div>
 
                 {loading ? (
@@ -94,18 +107,24 @@ const LoadOverlay = () => {
                             <div
                                 key={slot.id}
                                 onClick={() => handleSelect(slot)}
-                                className={`load-slot${selecting === slot.id ? " selecting" : ""}`}
+                                className={`load-slot${
+                                    selecting === slot.id ? " selecting" : ""
+                                }`}
                             >
                                 <div className="load-slot-left">
                                     <span className="load-slot-date">
-                                        #{slots.length - i} &nbsp;{formatDate(slot)}
+                                        #{slots.length - i} &nbsp;
+                                        {formatDate(slot)}
                                     </span>
                                     <span className="load-slot-name">
                                         {slot.playerName ?? "이름 없음"}
                                     </span>
                                 </div>
                                 <div className="load-slot-right">
-                                    <span>게임 시간 {formatGameTime(slot.timelineMinutes)}</span>
+                                    <span>
+                                        게임 시간{" "}
+                                        {formatGameTime(slot.timelineMinutes)}
+                                    </span>
                                     <span>쪽지 {slot.notes.length}개</span>
                                 </div>
                             </div>
@@ -113,7 +132,11 @@ const LoadOverlay = () => {
                     </div>
                 )}
 
-                <div className="overlay-btn" style={{ marginTop: 8, alignSelf: "flex-start" }} onClick={closeOverlay}>
+                <div
+                    className="overlay-btn"
+                    style={{ marginTop: 8, alignSelf: "flex-start" }}
+                    onClick={closeOverlay}
+                >
                     닫기
                 </div>
             </div>

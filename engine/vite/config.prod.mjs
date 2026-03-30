@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 프로덕션 빌드 설정
+// ──────────────────────────────────────────────────
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { execSync } from "child_process";

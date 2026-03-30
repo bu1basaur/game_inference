@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 메인 메뉴 씬
+// ──────────────────────────────────────────────────
+
 import { GameObjects, Scene } from "phaser";
 import { EventBus } from "../../events/EventBus";
 import { GAME_EVT } from "../../events/GameEvt";

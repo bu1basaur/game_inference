@@ -1,3 +1,7 @@
+// ──────────────────────────────────────────────────
+// # 캐릭터 정의 데이터
+// ──────────────────────────────────────────────────
+
 import { CharacterConfig } from "../../systems/CharacterManager";
 
 export const CHARACTERS: Record<string, CharacterConfig> = {

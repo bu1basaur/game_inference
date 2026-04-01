@@ -18,7 +18,7 @@ export class WorkLog {
 
         btn.setInteractive({ useHandCursor: true });
         btn.on("pointerdown", () => {
-            EventBus.emit(GAME_EVT.POPUP_OPEN);
+            EventBus.emit(GAME_EVT.OPEN_POPUP);
             EventBus.emit(GAME_EVT.OPEN_WORKLOG);
         });
     }

@@ -102,11 +102,53 @@ body {
     font-family: Bunpil;
     transition: color 0.3s;
 }
+
 .pause-btn:hover {
     color: #0ec3c9;
 }
 .pause-btn.exit:hover {
     color: #c91b0e;
+}
+.pause-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* ── Exit Modal ── */
+.exit-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.exit-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 44px 56px;
+    background: rgba(8, 8, 8, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+}
+
+.exit-modal-title {
+    font-size: 2rem;
+    font-family: Bunpil;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.1em;
+    margin: 0;
+}
+
+.exit-modal-btns {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
 }
 
 /* ── Save Button ── */

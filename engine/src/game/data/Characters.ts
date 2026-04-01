@@ -8,8 +8,8 @@ export const CHARACTERS: Record<string, CharacterConfig> = {
     homeless: {
         key: "nyangi", // 나중에 키값변경
         // atlasKey: "nyangi",
-        x: -300,
-        y: 100,
+        x: -200,
+        y: 50,
         anim: "idle_1",
         scale: 1,
         depth: -1,

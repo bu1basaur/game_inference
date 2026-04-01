@@ -50,7 +50,7 @@ export class TimelineManager {
         // 영업 종료
         if (this.currentMinutes >= this.END_HOUR * 60) {
             this.currentMinutes = this.END_HOUR * 60;
-            EventBus.emit(GAME_EVT.TIMELINE, "shop_close");
+            EventBus.emit(GAME_EVT.TIMELINE, "CLOSE_SHOP");
             return;
         }
 
@@ -63,8 +63,12 @@ export class TimelineManager {
             )
             .forEach((evt) => {
                 evt.triggered = true;
-                // 조건 체크
-                if (evt.condition && !evt.condition()) return;
+                const time = `${String(evt.hour).padStart(2, "0")}:${String(evt.minute).padStart(2, "0")}`;
+                // 조건 불충족 → 스킵 이벤트 발행
+                if (evt.condition && !evt.condition()) {
+                    EventBus.emit(GAME_EVT.TIMELINE_SKIP, { eventKey: evt.eventKey, time });
+                    return;
+                }
                 EventBus.emit(GAME_EVT.TIMELINE, evt.eventKey);
             });
     }
@@ -104,10 +108,7 @@ export class TimelineManager {
     /** HH:MM 포맷 */
     getTimeString(): string {
         const { hour, minute } = this.getTime();
-        return `${String(hour).padStart(2, "0")}:${String(minute).padStart(
-            2,
-            "0"
-        )}`;
+        return `${String(hour).padStart(2, "0")}:${String(Math.floor(minute)).padStart(2, "0")}`;
     }
 
     /** 현재 진행 상태 스냅샷 반환 */

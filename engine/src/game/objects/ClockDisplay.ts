@@ -16,19 +16,19 @@ export class ClockDisplay {
     /** 시계 UI 배치 */
     private buildUI() {
         // 시계판 배경
-        this.clockFace = this.scene.add
-            .image(1430, 320, "clock-face")
-            .setOrigin(0.5);
+        // this.clockFace = this.scene.add
+        //     .image(1430, 320, "clock-face")
+        //     .setOrigin(0.5);
 
         // 시침
         this.hourHandle = this.scene.add
-            .image(1430, 320, "clock-hour")
-            .setOrigin(0.5, 0.8);
+            .image(1505, 360, "clock-hour")
+            .setOrigin(0.5, 0.95);
 
         //분침
         this.minuteHandle = this.scene.add
-            .image(1430, 320, "clock-minute")
-            .setOrigin(0.5, 0.8);
+            .image(1505, 360, "clock-minute")
+            .setOrigin(0.5, 0.95);
     }
 
     /** 시간 업데이트 */

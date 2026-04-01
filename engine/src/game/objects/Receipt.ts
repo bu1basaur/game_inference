@@ -19,7 +19,7 @@ export class Receipt {
         btn.setInteractive({ useHandCursor: true });
 
         btn.on("pointerdown", () => {
-            EventBus.emit(GAME_EVT.POPUP_OPEN);
+            EventBus.emit(GAME_EVT.OPEN_POPUP);
             EventBus.emit("OPEN_RECEIPT");
         });
 

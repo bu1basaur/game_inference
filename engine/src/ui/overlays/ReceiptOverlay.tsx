@@ -10,7 +10,7 @@ const ReceiptOverlay = () => {
     const { closeOverlay } = useOverlayStore();
     const handleClose = () => {
         closeOverlay();
-        EventBus.emit(GAME_EVT.POPUP_CLOSE);
+        EventBus.emit(GAME_EVT.CLOSE_POPUP);
     };
 
     return (

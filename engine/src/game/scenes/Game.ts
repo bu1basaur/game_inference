@@ -27,6 +27,7 @@ import { GameTimelineHandler } from "../../systems/GameTimelineHandler";
 import { GamePauseController } from "../../systems/GamePauseController";
 import { EventBus } from "../../events/EventBus";
 import { GAME_EVT } from "../../events/GameEvt";
+import { useSettingsStore } from "../../stores/useSettingsStore";
 import { useSaveStore } from "../../stores/useSaveStore";
 import { useNoteStore } from "../../stores/useNoteStore";
 import { useAuthStore } from "../../stores/useAuthStore";
@@ -44,6 +45,8 @@ export class Game extends Scene {
     private eventHandler: GameEventHandler;
     public timelineHandler: GameTimelineHandler;
     public pauseControl: GamePauseController;
+    private _bgm: Phaser.Sound.WebAudioSound | null = null;
+    private _unsubSettings?: () => void;
 
     constructor() {
         super("Game");
@@ -52,6 +55,7 @@ export class Game extends Scene {
     preload() {}
 
     async create() {
+        this.add.image(906, 471, "bg_bg").setDepth(-10)
         this.add.image(960, 540, "bg");
 
         // 매니저 초기화
@@ -67,7 +71,8 @@ export class Game extends Scene {
         this.eventHandler = new GameEventHandler(
             this,
             this.characterManager,
-            this.dialogueManager
+            this.dialogueManager,
+            () => this.timelineManager.getTimeString()
         );
         registerListeners(this, this.timelineManager);
 
@@ -85,7 +90,21 @@ export class Game extends Scene {
         // 불러오기 데이터가 있으면 복원
         this.applyPendingLoad();
 
-        EventBus.emit(GAME_EVT.SCENE_READY, this);
+        // game_bgm 재생 (설정값 반영)
+        const { bgmVolume, bgmEnabled } = useSettingsStore.getState();
+        this.sound.stopByKey("game_bgm");
+        this._bgm = this.sound.add("game_bgm", { loop: true, volume: bgmVolume }) as Phaser.Sound.WebAudioSound;
+        this._bgm.play();
+        if (!bgmEnabled) this._bgm.setMute(true);
+
+        // 설정 스토어 구독 → 변경 즉시 사운드에 반영
+        this._unsubSettings = useSettingsStore.subscribe((state) => {
+            if (!this._bgm) return;
+            this._bgm.setVolume(state.bgmVolume);
+            this._bgm.setMute(!state.bgmEnabled);
+        });
+
+        EventBus.emit(GAME_EVT.READY_SCENE, this);
 
         // 원하는 씬부터 테스트 - data > Timeline 내부 이벤트 참고 !
         // this.test("scene_radio_news", 8, 0, true);
@@ -123,6 +142,12 @@ export class Game extends Scene {
     /** 타임라인 이벤트 발생 */
     public onTimelineEvent(eventkey: string) {
         this.timelineHandler.handle(eventkey);
+    }
+
+    /** BGM 정지 (씬 외부에서 호출용) */
+    public stopBgm() {
+        this._bgm?.stop();
+        this._bgm = null;
     }
 
     /** 게임 재개 */
@@ -217,6 +242,9 @@ export class Game extends Scene {
 
     /** 모든 게임 이벤트 제거 */
     shutdown() {
+        this._unsubSettings?.();
+        this._bgm?.stop();
+        this._bgm = null;
         unregisterListeners(this);
         EventBus.removeAllListeners(GAME_EVT.TIMELINE);
         EventBus.removeAllListeners(GAME_EVT.GOTO_MAIN);

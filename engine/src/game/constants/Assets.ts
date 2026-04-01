@@ -9,6 +9,7 @@ export const COMMON_ASSETS: AssetManifest = {
     images: {
         root: {
             bg: "bg", // → assets/common/images/bg.png
+            bg_bg: "bg_bg", // → assets/common/images/bg.png
         },
         ui: {
             "btn-next": "btn-next", // → assets/common/images/ui/btn-next.png

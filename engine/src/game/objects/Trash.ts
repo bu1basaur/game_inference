@@ -23,7 +23,7 @@ export class Trash {
             .setDepth(10);
 
         this.trash.on("pointerdown", () => {
-            // EventBus.emit(GAME_EVT.POPUP_OPEN);
+            // EventBus.emit(GAME_EVT.OPEN_POPUP);
             this.openNote();
         });
     }
@@ -34,8 +34,8 @@ export class Trash {
 
         const noteIndex = Phaser.Math.Between(1, 6);
         const imageKey = `note_${noteIndex}`;
-        EventBus.emit(GAME_EVT.POPUP_OPEN);
-        EventBus.emit(GAME_EVT.NOTE_OPEN, { imageKey });
+        EventBus.emit(GAME_EVT.OPEN_POPUP);
+        EventBus.emit(GAME_EVT.OPEN_NOTE, { imageKey });
     }
 
     destroy() {

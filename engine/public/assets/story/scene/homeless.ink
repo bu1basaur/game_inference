@@ -1,4 +1,4 @@
-=== scene_homeless ===
+=== homeless_visit_first ===
 # event: char_enter:homeless
 
 -> homeless_wait
@@ -34,6 +34,7 @@
 
     * [방석 있음]
         # speaker: 잡화점 사장
+        # event: open_inventory:방석:homeless
      네, 여기 있습니다. 두툼해서 오래 앉아 있어도 배기지 않을 거예요.
         -> homeless_kind_sell
 
@@ -72,6 +73,7 @@
 
     * [방석 판매]
         # speaker: 잡화점 사장
+        # event: open_inventory:방석:homeless
         여기요. 빨리 계산하고 가세요.
         -> homeless_rude_sell
 
@@ -129,7 +131,8 @@
 
     * [전화번호부를 건넨다.]
         # speaker: 잡화점 사장
-        뭐, 어차피 버리려던 거니까 가지가세요.
+        # event: open_inventory:전화번호부:homeless
+        뭐, 어차피 버리려던 거니까 가져가세요.
         -> homeless_phonebook_give
 
     * [전화번호부를 건네지 않는다.]
@@ -138,6 +141,7 @@
         -> homeless_phonebook_deny
 
 = homeless_phonebook_give
+# event: worklog:노숙자에게 전화번호부를 줌
 
 # speaker: 노숙자
 # emotion: grateful
@@ -149,6 +153,7 @@
 -> homeless_give_exit
 
 = homeless_phonebook_deny
+# event: worklog:노숙자가 전화번호부를 요청했으나 거절
 
 # speaker: 노숙자
 # emotion: disappointed

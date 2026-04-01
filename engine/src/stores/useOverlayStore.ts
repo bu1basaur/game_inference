@@ -13,6 +13,9 @@ type OverlayType =
     | "load"
     | "notebook"
     | "worklog"
+    | "options"
+    | "gallery"
+    | "credits"
     | null;
 
 export interface OverlayData {

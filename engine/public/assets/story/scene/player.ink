@@ -1,4 +1,4 @@
-=== scene_open ===
+=== shop_open ===
 # speaker: 잡화점 사장
 # emotion: normal
 오늘도 좋은 아침... 이라기에는 또 [size=40][color=orange]새똥[/color][/size]이 잔뜩이잖아?

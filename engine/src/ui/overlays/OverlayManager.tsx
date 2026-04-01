@@ -11,6 +11,9 @@ import NoteOverlay from "./NoteOverlay";
 import LoadOverlay from "./LoadOverlay";
 import NotebookOverlay from "./NotebookOverlay";
 import WorkLogOverlay from "./WorkLogOverlay";
+import OptionsOverlay from "./OptionsOverlay";
+import EndingGallery from "./EndingGallery";
+import CreditsOverlay from "./CreditsOverlay";
 
 const OverlayManager = () => {
     const { overlay } = useOverlayStore();
@@ -25,6 +28,9 @@ const OverlayManager = () => {
             {overlay === "load" && <LoadOverlay />}
             {overlay === "notebook" && <NotebookOverlay />}
             {overlay === "worklog" && <WorkLogOverlay />}
+            {overlay === "options" && <OptionsOverlay />}
+            {overlay === "gallery" && <EndingGallery />}
+            {overlay === "credits" && <CreditsOverlay />}
         </>
     );
 };

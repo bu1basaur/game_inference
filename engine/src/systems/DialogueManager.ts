@@ -22,7 +22,9 @@ export class DialogueManager {
     private choiceButtons: BBCodeTextType[] = [];
 
     private autoMode: boolean = true; // 다이얼로그 자동 넘김 모드 설정
-    private autoToggleBtn: Phaser.GameObjects.Image;
+    private autoToggleBtn: Phaser.GameObjects.Container;
+    private spinnerRing: Phaser.GameObjects.Graphics;
+    private spinnerTween?: Phaser.Tweens.Tween;
 
     private autoNextTimer?: Phaser.Time.TimerEvent;
 
@@ -79,23 +81,44 @@ export class DialogueManager {
             this.dialogueBox
         );
 
-        // 자동 넘김 토글 버튼
+        // 자동 넘김 토글 버튼 (gradient ring spinner)
+        const SPINNER_X = 1800;
+        const SPINNER_Y = 850;
+        const OUTER_R = 30;
+
+        this.spinnerRing = this.scene.add.graphics();
+        this.drawSpinnerRing(this.autoMode);
+
         this.autoToggleBtn = this.scene.add
-            .image(1800, 850, "loop_on")
-            .setInteractive({ useHandCursor: true })
+            .container(SPINNER_X, SPINNER_Y, [this.spinnerRing])
             .setDepth(DEPTH)
-            .setScale(0.5, 0.5)
-            .setVisible(false);
+            .setVisible(false)
+            .setSize(OUTER_R * 2, OUTER_R * 2)
+            .setInteractive({ useHandCursor: true });
+
+        this.spinnerTween = this.scene.tweens.add({
+            targets: this.autoToggleBtn,
+            angle: 360,
+            duration: 2500,
+            repeat: -1,
+            ease: "Linear",
+            paused: !this.autoMode,
+        });
 
         this.autoToggleBtn.on("pointerdown", () => {
             this.autoMode = !this.autoMode;
-            this.autoToggleBtn.setTexture(
-                this.autoMode ? "loop_on" : "loop_off"
-            );
+            if (this.autoMode) {
+                this.drawSpinnerRing(true);
+                this.spinnerTween?.resume();
+            } else {
+                this.spinnerTween?.pause();
+                this.autoToggleBtn.setAngle(0);
+                this.drawSpinnerRing(false);
+            }
 
             // 수동 -> 자동 전환 시 대기 중인 콜백 있으면 바로 적용
             if (this.autoMode && this.dialogueComplete) {
-                EventBus.emit(GAME_EVT.DIALOGUE_RESUME);
+                EventBus.emit(GAME_EVT.RESUME_DIALOGUE);
 
                 this.autoNextTimer = this.scene.time.delayedCall(2000, () => {
                     const callback = this.dialogueComplete;
@@ -111,6 +134,39 @@ export class DialogueManager {
                 this.autoNextTimer = undefined;
             }
         });
+    }
+
+    
+    /** 대화창 자동 넘김 on/off 상태 회전 스피너 */
+    private drawSpinnerRing(gradient: boolean) {
+        const STROKE_R = 27.75;
+        const STROKE_W = 4.5;
+        const STEPS = 60;
+        this.spinnerRing.clear();
+
+        if (gradient) {
+            // 진회색(위) → 연회색(아래) 그라디언트
+            const topColor = { r: 0x68, g: 0x68, b: 0x68 }; // rgba(68, 68, 68, 1)
+            const botColor = { r: 0xbb, g: 0xbb, b: 0xbb }; // #bdbdbdff
+            for (let i = 0; i < STEPS; i++) {
+                const midAngle = (i + 0.5) * ((2 * Math.PI) / STEPS);
+                const t = (Math.sin(midAngle) + 1) / 2;
+                const r = Math.round(topColor.r + (botColor.r - topColor.r) * t);
+                const g = Math.round(topColor.g + (botColor.g - topColor.g) * t);
+                const b = Math.round(topColor.b + (botColor.b - topColor.b) * t);
+                const color = (r << 16) | (g << 8) | b;
+                const a1 = (i / STEPS) * 2 * Math.PI;
+                const a2 = ((i + 1) / STEPS) * 2 * Math.PI;
+                this.spinnerRing.lineStyle(STROKE_W, color, 1);
+                this.spinnerRing.beginPath();
+                this.spinnerRing.arc(0, 0, STROKE_R, a1, a2, false);
+                this.spinnerRing.strokePath();
+            }
+        } else {
+            // 정지 상태 → 단색 진회색
+            this.spinnerRing.lineStyle(STROKE_W, 0x999999, 1);
+            this.spinnerRing.strokeCircle(0, 0, STROKE_R);
+        }
     }
 
     /** 대화창 보여주기 */
@@ -155,7 +211,7 @@ export class DialogueManager {
                 } else {
                     // 수동 모드 - 클릭 대기 중 시간 정지
                     console.log("로직 확인");
-                    EventBus.emit(GAME_EVT.DIALOGUE_WAITING);
+                    EventBus.emit(GAME_EVT.WAIT_DIALOGUE);
                 }
             },
         });

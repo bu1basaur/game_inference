@@ -34,7 +34,7 @@ export class Ending extends Scene {
             .setOrigin(0.5)
             .setDepth(100);
 
-        EventBus.emit(GAME_EVT.SCENE_READY, this);
+        EventBus.emit(GAME_EVT.READY_SCENE, this);
     }
 
     changeScene() {

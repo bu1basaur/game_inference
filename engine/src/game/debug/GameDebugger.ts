@@ -34,9 +34,9 @@ export class GameDebugger {
         this.game.timelineHandler.applySideEffects(eventKey);
 
         // 노숙자가 다녀간 상태 → trash 배치 (디버그 전용)
-        if (eventKey === "scene_homeless") {
+        if (eventKey === "homeless_visit_first") {
             const trash = new Trash(this.game);
-            trash.show(700, 650);
+            trash.show(700, 690);
         }
     }
 }

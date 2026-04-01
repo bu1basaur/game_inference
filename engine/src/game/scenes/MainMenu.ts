@@ -5,6 +5,7 @@
 import { GameObjects, Scene } from "phaser";
 import { EventBus } from "../../events/EventBus";
 import { GAME_EVT } from "../../events/GameEvt";
+import { useSettingsStore } from "../../stores/useSettingsStore";
 
 const MENU_ITEMS = [
     { label: "게임 시작", action: "start", x: 80, y: 690 },
@@ -12,8 +13,8 @@ const MENU_ITEMS = [
     { label: "옵션", action: "option", x: 80, y: 870 },
     { label: "나가기", action: "exit", x: 80, y: 960 },
 
-    { label: "수집한 엔딩", action: "option", x: 1620, y: 800 },
-    { label: "만든 사람들", action: "option", x: 1620, y: 890 },
+    { label: "수집한 엔딩", action: "gallery", x: 1620, y: 800 },
+    { label: "만든 사람들", action: "credits", x: 1620, y: 890 },
 ] as const;
 
 type MenuAction = (typeof MENU_ITEMS)[number]["action"];
@@ -23,6 +24,8 @@ export class MainMenu extends Scene {
     logo: GameObjects.Image;
     title: GameObjects.Text;
     logoTween: Phaser.Tweens.Tween | null;
+    private _bgm: Phaser.Sound.WebAudioSound | null = null;
+    private _unsubSettings?: () => void;
 
     constructor() {
         super("MainMenu");
@@ -50,7 +53,24 @@ export class MainMenu extends Scene {
             this.createMenuButton(label, x, y, action);
         });
 
-        EventBus.emit(GAME_EVT.SCENE_READY, this);
+        // main_bgm 재생 (설정값 반영)
+        const { bgmVolume, bgmEnabled } = useSettingsStore.getState();
+        this.sound.stopByKey("main_bgm"); // 이전 인스턴스 정지
+        this._bgm = this.sound.add("main_bgm", {
+            loop: true,
+            volume: bgmVolume,
+        }) as Phaser.Sound.WebAudioSound;
+        this._bgm.play();
+        if (!bgmEnabled) this._bgm.setMute(true);
+
+        // 설정 스토어 구독 → 변경 즉시 사운드에 반영
+        this._unsubSettings = useSettingsStore.subscribe((state) => {
+            if (!this._bgm) return;
+            this._bgm.setVolume(state.bgmVolume);
+            this._bgm.setMute(!state.bgmEnabled);
+        });
+
+        EventBus.emit(GAME_EVT.READY_SCENE, this);
     }
 
     private createMenuButton(
@@ -80,19 +100,34 @@ export class MainMenu extends Scene {
     private handleMenuAction(action: MenuAction) {
         switch (action) {
             case "start":
+                this.sound.stopByKey("main_bgm");
                 this.scene.start("Preloader");
                 break;
             case "load":
                 EventBus.once(GAME_EVT.LOAD_READY, () => {
+                    this.sound.stopByKey("main_bgm");
                     this.scene.start("Preloader");
                 });
                 EventBus.emit(GAME_EVT.OPEN_LOAD_OVERLAY);
                 break;
             case "option":
+                EventBus.emit(GAME_EVT.OPEN_OPTIONS);
+                break;
+            case "gallery":
+                EventBus.emit(GAME_EVT.OPEN_GALLERY);
+                break;
+            case "credits":
+                EventBus.emit(GAME_EVT.OPEN_CREDITS);
                 break;
             case "exit":
                 break;
         }
+    }
+
+    shutdown() {
+        this._unsubSettings?.();
+        this._bgm?.stop();
+        this._bgm = null;
     }
 
     changeScene() {

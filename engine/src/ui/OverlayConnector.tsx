@@ -21,6 +21,9 @@ const OverlayConnector = () => {
         const openLoad = () => openOverlay("load");
         const openNotebook = () => openOverlay("notebook");
         const openWorklog = () => openOverlay("worklog");
+        const openOptions = () => openOverlay("options");
+        const openGallery = () => openOverlay("gallery");
+        const openCredits = () => openOverlay("credits");
         const handleWorkLogAdd = ({
             time,
             content,
@@ -38,8 +41,11 @@ const OverlayConnector = () => {
         EventBus.on(GAME_EVT.OPEN_LOAD_OVERLAY, openLoad);
         EventBus.on(GAME_EVT.OPEN_NOTEBOOK, openNotebook);
         EventBus.on(GAME_EVT.OPEN_WORKLOG, openWorklog);
-        EventBus.on(GAME_EVT.WORKLOG_ADD, handleWorkLogAdd);
-        EventBus.on(GAME_EVT.NOTE_OPEN, ({ imageKey }: OverlayData) => {
+        EventBus.on(GAME_EVT.OPEN_OPTIONS, openOptions);
+        EventBus.on(GAME_EVT.OPEN_GALLERY, openGallery);
+        EventBus.on(GAME_EVT.OPEN_CREDITS, openCredits);
+        EventBus.on(GAME_EVT.ADD_WORKLOG, handleWorkLogAdd);
+        EventBus.on(GAME_EVT.OPEN_NOTE, ({ imageKey }: OverlayData) => {
             openOverlay("note", { imageKey });
             addNote({ imageKey: imageKey! });
         });
@@ -51,8 +57,11 @@ const OverlayConnector = () => {
             EventBus.off(GAME_EVT.OPEN_LOAD_OVERLAY, openLoad);
             EventBus.off(GAME_EVT.OPEN_NOTEBOOK, openNotebook);
             EventBus.off(GAME_EVT.OPEN_WORKLOG, openWorklog);
-            EventBus.off(GAME_EVT.WORKLOG_ADD, handleWorkLogAdd);
-            EventBus.off(GAME_EVT.NOTE_OPEN);
+            EventBus.off(GAME_EVT.OPEN_OPTIONS, openOptions);
+            EventBus.off(GAME_EVT.OPEN_GALLERY, openGallery);
+            EventBus.off(GAME_EVT.OPEN_CREDITS, openCredits);
+            EventBus.off(GAME_EVT.ADD_WORKLOG, handleWorkLogAdd);
+            EventBus.off(GAME_EVT.OPEN_NOTE);
         };
     }, []);
 

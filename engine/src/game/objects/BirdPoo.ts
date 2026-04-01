@@ -14,7 +14,7 @@ export class BirdPoo {
 
     show() {
         this.poo = this.scene.add
-            .image(1020, 660, "poo")
+            .image(1050, 690, "poo")
             .setInteractive({ useHandCursor: true })
             .once("pointerdown", () => this.remove());
     }

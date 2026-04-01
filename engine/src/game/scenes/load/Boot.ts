@@ -22,6 +22,47 @@ export class Boot extends Scene {
             bar.width = 4 + 460 * progress;
         });
 
+        // 로드 상태 텍스트
+        const statusMessages: Record<string, string[]> = {
+            image: [
+                "오늘의 영업을 준비중입니다.",
+                "진열대를 정리하는 중입니다.",
+                "가게의 불을 켜는 중입니다.",
+                "먼지를 털어내고 있습니다."
+            ],
+            audio: [
+                "거리의 소음을 모으는 중입니다.",
+                "고요를 깨우는 중입니다.",
+                "손님들의 발소리를 준비 중입니다.",
+            ],
+            spine: [
+                "손님들을 맞이할 준비 중입니다.",
+                "문너머에서 발소리가 들립니다.",
+                "단골손님을 부르는 중입니다.",
+            ],
+            json: [
+                "기억을 정리하는 중입니다.",
+                "계산기를 두드리는 중입니다."
+            ]
+            
+        };
+
+        const statusText = this.add
+            .text(centerX, centerY + 100, "", {
+                fontFamily: "sans-serif",
+                fontSize: "24px",
+                color: "#aaaaaa",
+            })
+            .setOrigin(0.5);
+
+        let lastFileKey = "";
+        this.load.on("fileprogress", (file: Phaser.Loader.File) => {
+            if (file.key === lastFileKey) return;
+            lastFileKey = file.key;
+            const variants = statusMessages[file.type] ?? statusMessages.image;
+            statusText.setText(Phaser.Math.RND.pick(variants));
+        });
+
         this.loadAssets();
     }
 
@@ -33,6 +74,8 @@ export class Boot extends Scene {
     /** 애셋 로드 */
     private loadAssets() {
         this.load.image("bg", "assets/common/images/bg.png");
+        this.load.audio("main_bgm", "assets/game/sounds/main_bgm.mp3");
+        this.load.audio("game_bgm", "assets/game/sounds/game_bgm.mp3");
     }
 
     /** 폰트 로드 */
@@ -45,12 +88,7 @@ export class Boot extends Scene {
             document.head.appendChild(link);
         });
 
-        await document.fonts.load('24px "Boardmarker"');
         await document.fonts.load('24px "Bunpil"');
-        await document.fonts.load('24px "ByeolbichhaneulL"');
-        await document.fonts.load('24px "ByeolbichhaneulB"');
-        await document.fonts.load('24px "Dotbogi"');
-        await document.fonts.load('24px "Jayeon"');
         await document.fonts.load('24px "Kkokkoma"');
         console.log("폰트 로드 완료");
     }

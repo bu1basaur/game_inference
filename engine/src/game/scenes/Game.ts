@@ -177,6 +177,13 @@ export class Game extends Scene {
             if (step.text) {
                 const hasChoices = step.choices.length > 0;
 
+                // char_talk 이벤트가 있으면 타이핑 완료 후 입을 닫음
+                const talkEvent = step.events.find(e => e.startsWith('char_talk:'));
+                const talkerId = talkEvent?.split(':')[1];
+                const onTypingComplete = talkerId
+                    ? () => this.characterManager.still(talkerId)
+                    : undefined;
+
                 this.dialogueManager.show(
                     step,
                     () => {
@@ -196,7 +203,8 @@ export class Game extends Scene {
                             this.advanceStory();
                         }
                     },
-                    !hasChoices
+                    !hasChoices,
+                    onTypingComplete
                 );
                 return;
             }

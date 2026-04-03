@@ -44,6 +44,16 @@ export class GameEventHandler {
                 this.characterManager.setAnim(id, anim, loopStr !== "false");
                 break;
             }
+            case "char_talk": {
+                const [id] = args;
+                this.characterManager.talk(id);
+                break;
+            }
+            case "char_still": {
+                const [id] = args;
+                this.characterManager.still(id);
+                break;
+            }
             case "open_inventory": {
                 // 태그 형식: "open_inventory:아이템A:캐릭터ID"
                 // 예) "open_inventory:방석:homeless"

@@ -15,6 +15,7 @@ export const TIMELINE_EVENTS: TimelineEntry[] = [
     { hour: 7, minute: 0, eventKey: "shop_open" },
     { hour: 7, minute: 20, eventKey: "fly_add" },
     { hour: 7, minute: 30, eventKey: "homeless_visit_first" },
+    { hour: 7, minute: 15, eventKey: "yogurt_visit_first" },
     { hour: 7, minute: 45, eventKey: "fly_add" },
     {
         hour: 8,

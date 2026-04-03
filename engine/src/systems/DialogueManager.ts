@@ -170,7 +170,7 @@ export class DialogueManager {
     }
 
     /** 대화창 보여주기 */
-    show(step: StoryStep, onComplete?: () => void, autoNext: boolean = true) {
+    show(step: StoryStep, onComplete?: () => void, autoNext: boolean = true, onTypingComplete?: () => void) {
         this.setVisible(true);
         this.clearChoices();
         this.clearAutoNext();
@@ -183,6 +183,8 @@ export class DialogueManager {
         this.typewriter.play(step.text, {
             speed: 40,
             onComplete: () => {
+                // 타이핑 완료 시 입 닫기 (클릭/자동넘김 대기 중)
+                onTypingComplete?.();
                 // 선택지 있는 경우 즉시 onComplete (선택지 표시)
                 if (!autoNext) {
                     onComplete?.();

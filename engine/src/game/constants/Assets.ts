@@ -43,6 +43,6 @@ export const GAME_ASSETS: AssetManifest = {
     },
     spine: {
         basePath: "assets/spine/",
-        characters: ["nyangi"],
+        characters: ["nyangi", "ch_1"],
     },
 };

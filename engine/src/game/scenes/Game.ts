@@ -106,8 +106,14 @@ export class Game extends Scene {
 
         EventBus.emit(GAME_EVT.READY_SCENE, this);
 
-        // 원하는 씬부터 테스트 - data > Timeline 내부 이벤트 참고 !
-        // this.test("scene_radio_news", 8, 0, true);
+        // 디버그 시간 점프 리스너 (DEV 전용)
+        if (import.meta.env.DEV) {
+            EventBus.on(GAME_EVT.DEBUG_TIME_JUMP, async ({ hour, minute }: { hour: number; minute: number }) => {
+                const { GameDebugger } = await import("../debug/GameDebugger");
+                const debug = new GameDebugger(this);
+                debug.jumpToTime(hour, minute);
+            });
+        }
     }
 
     update(_: number, delta: number) {
@@ -256,29 +262,13 @@ export class Game extends Scene {
         unregisterListeners(this);
         EventBus.removeAllListeners(GAME_EVT.TIMELINE);
         EventBus.removeAllListeners(GAME_EVT.GOTO_MAIN);
+        if (import.meta.env.DEV) {
+            EventBus.removeAllListeners(GAME_EVT.DEBUG_TIME_JUMP);
+        }
     }
 
     /** 씬 전환 */
     changeScene() {
         this.scene.start("GameOver");
-    }
-
-    /** 테스트용
-     * @param event "scene_radio_news" 이벤트명
-     * @param hour 해당 이벤트 시작 시간
-     * @param minute 해당 이벤트 시작 분
-     * @param runPrev 이전 이벤트 모두 실행
-     */
-    private async test(
-        event: string,
-        hour: number,
-        minute: number,
-        runPrev: boolean
-    ) {
-        if (import.meta.env.DEV) {
-            const { GameDebugger } = await import("../debug/GameDebugger");
-            const debug = new GameDebugger(this);
-            debug.startFrom(event, hour, minute, runPrev);
-        }
     }
 }

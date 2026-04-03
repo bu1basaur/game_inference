@@ -1,9 +1,9 @@
 === homeless_visit_first ===
 # event: char_enter:homeless
 
--> homeless_wait
+-> homeless_talk_first
 
-= homeless_wait
+= homeless_talk_first
 # speaker: 노숙자
 # emotion: nervous
 저... 실례합니다.\\n혹시... 물건을 좀 살 수 있을까 해서요.

@@ -22,11 +22,11 @@ export const CHARACTERS: Record<string, CharacterConfig> = {
 
     yogurt_lady: {
         key: "ch_1",
-        x: 900,
-        y: 1350,
+        x:900,
+        y: 1130,
         anim: "idle_6",
         skin:"mouth_still",
-        scale: 0.7,
+        scale: 0.55,
         depth: -1,
         enterFrom: "right",
         exitTo: "left",

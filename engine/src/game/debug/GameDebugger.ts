@@ -9,25 +9,23 @@ import { Trash } from "../objects/Trash";
 export class GameDebugger {
     constructor(private game: Game) {}
 
-    startFrom(knot: string, hour?: number, minute?: number, runPrev = true) {
-        if (hour !== undefined) {
-            this.game.timelineManager.setTime(hour, minute ?? 0);
-        }
+    jumpToTime(hour: number, minute: number) {
+        // 대화 초기화 (타이핑/선택지/창 모두) + 스파인 캐릭터 전부 제거
+        this.game.dialogueManager.reset();
+        this.game.characterManager.destroyAll();
 
-        if (runPrev) {
-            const targetMinutes = (hour ?? 7) * 60 + (minute ?? 0);
-            TIMELINE_EVENTS.filter(
-                (evt) => evt.hour * 60 + evt.minute < targetMinutes
-            ).forEach((evt) => {
-                if (evt.condition && !evt.condition()) return;
-                this.runSideEffectsOnly(evt.eventKey);
-            });
-        }
+        // 해당 시각 이전 이벤트 사이드 이펙트 적용
+        const targetMinutes = hour * 60 + minute;
+        TIMELINE_EVENTS.filter(
+            (evt) => evt.hour * 60 + evt.minute < targetMinutes
+        ).forEach((evt) => {
+            if (evt.condition && !evt.condition()) return;
+            this.runSideEffectsOnly(evt.eventKey);
+        });
 
-        this.game.storyManager.jumpTo(knot);
-        this.game.dialogueManager.setVisible(true);
-        this.game.timelineManager.pause();
-        this.game.advanceStory();
+        // 해당 시각 직전으로 타임라인 설정 → 이후 이벤트 자연 발동
+        this.game.timelineManager.setTimeBeforeEvent(hour, minute);
+        this.game.timelineManager.resume();
     }
 
     private runSideEffectsOnly(eventKey: string) {

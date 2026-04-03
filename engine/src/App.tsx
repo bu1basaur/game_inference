@@ -12,6 +12,7 @@ import OverlayConnector from "./ui/OverlayConnector";
 import OverlayManager from "./ui/overlays/OverlayManager";
 import LoginPanel from "./ui/LoginPanel";
 import SaveButton from "./ui/SaveButton";
+import DebugPanel from "./ui/DebugPanel";
 
 function App() {
     const isPaused = useGameStore((s) => s.isPaused);
@@ -107,6 +108,7 @@ function App() {
 
             {currentScene === "MainMenu" && <LoginPanel />}
             {currentScene === "Game" && <SaveButton />}
+            {import.meta.env.DEV && currentScene === "Game" && <DebugPanel />}
 
             <OverlayConnector />
             <OverlayManager />

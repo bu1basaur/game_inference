@@ -136,4 +136,13 @@ export class TimelineManager {
             }
         });
     }
+
+    /** 디버그용 - 특정 시각 직전으로 설정 (해당 시각 이벤트는 아직 트리거 안 됨) */
+    setTimeBeforeEvent(hour: number, minute: number): void {
+        const targetMinutes = hour * 60 + minute;
+        this.currentMinutes = targetMinutes - 0.1;
+        this.events.forEach((evt) => {
+            evt.triggered = evt.hour * 60 + evt.minute < targetMinutes;
+        });
+    }
 }

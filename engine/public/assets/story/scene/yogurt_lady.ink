@@ -1,14 +1,11 @@
 === yogurt_visit_first ===
 # event: char_enter:yogurt_lady
 
--> yogurt_talk
+-> yogurt_talk_first
 
-= yogurt_talk
-
-
+= yogurt_talk_first
 # speaker: 요구르트 판매원
 # event: char_talk:yogurt_lady
-# event: char_anim:yogurt_lady:bored
 사장님, 안녕~ 오늘도 부지런하시네.
 
 # speaker: 요구르트 판매원
@@ -32,6 +29,7 @@
 
 # speaker: 요구르트 판매원
 # event: char_talk:yogurt_lady
+# event: char_anim:yogurt_lady:bored
 이 안에 뭐가 들었는지 알면 깜짝 놀랄 걸?
 
 # speaker: 요구르트 판매원
@@ -42,7 +40,7 @@
     * [사양한다]
         # speaker: 잡화점 사장
         # event: char_still:yogurt_lady
-        # event: char_anim:yogurt_lady:idle
+        # event: char_anim:yogurt_lady:angry
         또 요구르트야?\\n아침에 이미 마셨어.
         -> yogurt_exit
 

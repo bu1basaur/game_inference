@@ -227,6 +227,13 @@ export class DialogueManager {
         this.dialogueBox.off("pointerdown");
     }
 
+    /** 대화창 완전 초기화 (타이핑 정지 + 선택지 제거 + 창 숨김) */
+    reset() {
+        this.typewriter.stop();
+        this.clearChoices();
+        this.setVisible(false);
+    }
+
     /** 대화창 노출/숨김 */
     setVisible(visible: boolean) {
         if (!visible) this.clearAutoNext();

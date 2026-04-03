@@ -44,6 +44,9 @@ export const GAME_EVT = {
     OPEN_NOTEBOOK: "OPEN_NOTEBOOK",
     OPEN_WORKLOG: "OPEN_WORKLOG",
 
+    /* ──────────────── 디버그 ──────────────── */
+    DEBUG_TIME_JUMP: "DEBUG_TIME_JUMP",
+
     /* ──────────────── 데이터 ──────────────── */
     // 저장·인벤토리·기록
     SAVE: "SAVE",

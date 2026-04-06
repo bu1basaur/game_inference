@@ -3,7 +3,7 @@
 // ──────────────────────────────────────────────────
 
 import BBCodeText from "phaser3-rex-plugins/plugins/bbcodetext";
-import { Dialogue } from "./Dialogue";
+import { Dialogue } from "../game/objects/Dialogue";
 import { StoryStep } from "./StoryManager";
 import { EventBus } from "../events/EventBus";
 import { GAME_EVT } from "../events/GameEvt";

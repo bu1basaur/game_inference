@@ -62,10 +62,12 @@ export class GameEventHandler {
                 //   → requiredItems가 비어있으면 아무 아이템이나 허용
                 const speakerKey = args[args.length - 1];
                 const requiredItems = args.slice(0, -1);
-                const rejection = INVENTORY_REJECTIONS[speakerKey];
+                const rejection = INVENTORY_REJECTIONS[speakerKey]?.[requiredItems[0] ?? ""];
+                const extraRejection = INVENTORY_REJECTIONS[speakerKey]?.["_extra"];
 
                 return new Promise<void>((resolve) => {
                     let rejectCount = 0;
+                    let extraRejectCount = 0;
 
                     const tryOpen = () => {
                         let confirmedItems: string[] = [];
@@ -94,36 +96,55 @@ export class GameEventHandler {
                                 return;
                             }
 
-                            const isCorrect =
+                            const hasRequired =
                                 requiredItems.length === 0 ||
                                 confirmedItems.some((item) =>
                                     requiredItems.includes(item)
                                 );
+                            const hasExtras =
+                                requiredItems.length > 0 &&
+                                confirmedItems.some(
+                                    (item) => !requiredItems.includes(item)
+                                );
 
-                            if (isCorrect) {
+                            // 요청 아이템 포함 + 그 외 아이템 미포함 -> 정답
+                            if (hasRequired && !hasExtras) {
                                 resolve();
-                            } else {
-                                // 틀린 횟수에 따라 대사 에스컬레이션
-                                // 마지막 항목은 초과 시에도 반복 사용
-                                const lines = rejection?.lines;
-                                const text =
-                                    lines[
-                                        Math.min(rejectCount, lines.length - 1)
-                                    ];
-                                const speaker =
-                                    rejection?.speaker ?? speakerKey;
-                                rejectCount++;
+                                return;
+                            }
 
+                            // 요청 아이템은 있지만 다른 아이템도 함께 건넨 경우
+                            if (hasRequired && hasExtras) {
+                                const lines = extraRejection?.lines ?? ["다른 건 없어도 돼요."];
+                                const text = lines[Math.min(extraRejectCount, lines.length - 1)];
+                                const speaker = extraRejection?.speaker ?? speakerKey;
+                                extraRejectCount++;
                                 this.dialogueManager.show(
-                                    {
-                                        text,
-                                        speaker,
-                                        events: [],
-                                        choices: [],
-                                    },
+                                    { text, speaker, events: [], choices: [] },
                                     () => tryOpen()
                                 );
+                                return;
                             }
+
+                            // 요청 아이템이 아예 없는 경우
+                            const lines = rejection?.lines ?? ["이게 아니에요."];
+                            const text =
+                                lines[
+                                    Math.min(rejectCount, lines.length - 1)
+                                ];
+                            const speaker =
+                                rejection?.speaker ?? speakerKey;
+                            rejectCount++;
+
+                            this.dialogueManager.show(
+                                {
+                                    text,
+                                    speaker,
+                                    events: [],
+                                    choices: [],
+                                },
+                                () => tryOpen()
+                            );
                         });
 
                         EventBus.emit(GAME_EVT.OPEN_POPUP);

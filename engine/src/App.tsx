@@ -108,7 +108,8 @@ function App() {
 
             {currentScene === "MainMenu" && <LoginPanel />}
             {currentScene === "Game" && <SaveButton />}
-            {import.meta.env.DEV && currentScene === "Game" && <DebugPanel />}
+            {/* {import.meta.env.DEV && currentScene === "Game" && <DebugPanel />} */}
+            {currentScene === "Game" && <DebugPanel />}
 
             <OverlayConnector />
             <OverlayManager />

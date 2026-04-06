@@ -32,6 +32,12 @@ export class SpineX {
 
     // ── 애니메이션 단축 메서드 ──────────────────────────
 
+    /** 기본 대기 1 (idle_1) */
+    idle1(): this { return this.setAnim('idle_1'); }
+
+    /** 딴짓/따분함 (idle_2) */
+    bored(): this { return this.setAnim('bored'); }
+
     /** 화난 상태 (idle_3) */
     angry(): this { return this.setAnim('idle_3'); }
 
@@ -43,12 +49,6 @@ export class SpineX {
 
     /** 왼쪽 보행 (idle_6) */
     walkLeft(): this { return this.setAnim('idle_6'); }
-
-    /** 기본 대기 1 (idle_1) */
-    idle1(): this { return this.setAnim('idle_1'); }
-
-    /** 딴짓/따분함 (idle_2) */
-    bored(): this { return this.setAnim('bored'); }
 
     // ── Mix 설정 ──────────────────────────────────────
 

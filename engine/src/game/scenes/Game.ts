@@ -106,14 +106,12 @@ export class Game extends Scene {
 
         EventBus.emit(GAME_EVT.READY_SCENE, this);
 
-        // 디버그 시간 점프 리스너 (DEV 전용)
-        if (import.meta.env.DEV) {
-            EventBus.on(GAME_EVT.DEBUG_TIME_JUMP, async ({ hour, minute }: { hour: number; minute: number }) => {
-                const { GameDebugger } = await import("../debug/GameDebugger");
-                const debug = new GameDebugger(this);
-                debug.jumpToTime(hour, minute);
-            });
-        }
+        // 디버그 시간 점프 리스너
+        EventBus.on(GAME_EVT.DEBUG_TIME_JUMP, async ({ hour, minute }: { hour: number; minute: number }) => {
+            const { GameDebugger } = await import("../debug/GameDebugger");
+            const debug = new GameDebugger(this);
+            debug.jumpToTime(hour, minute);
+        });
     }
 
     update(_: number, delta: number) {
@@ -262,9 +260,7 @@ export class Game extends Scene {
         unregisterListeners(this);
         EventBus.removeAllListeners(GAME_EVT.TIMELINE);
         EventBus.removeAllListeners(GAME_EVT.GOTO_MAIN);
-        if (import.meta.env.DEV) {
-            EventBus.removeAllListeners(GAME_EVT.DEBUG_TIME_JUMP);
-        }
+        EventBus.removeAllListeners(GAME_EVT.DEBUG_TIME_JUMP);
     }
 
     /** 씬 전환 */

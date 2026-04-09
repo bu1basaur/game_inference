@@ -19,33 +19,27 @@ export class Boot extends Scene {
             .setStrokeStyle(1, 0xffffff);
         const bar = this.add.rectangle(centerX - 230, centerY, 4, 28, 0xffffff);
         this.load.on("progress", (progress: number) => {
-            bar.width = 4 + 460 * progress;
+            this.tweens.add({
+            targets: bar,
+            width: 4 + 460 * progress,
+            duration: 150,
+            ease: "Linear",
+            });
         });
 
         // 로드 상태 텍스트
-        const statusMessages: Record<string, string[]> = {
-            image: [
-                "오늘의 영업을 준비중입니다.",
-                "진열대를 정리하는 중입니다.",
-                "가게의 불을 켜는 중입니다.",
-                "먼지를 털어내고 있습니다."
-            ],
-            audio: [
-                "거리의 소음을 모으는 중입니다.",
-                "고요를 깨우는 중입니다.",
-                "손님들의 발소리를 준비 중입니다.",
-            ],
-            spine: [
-                "손님들을 맞이할 준비 중입니다.",
-                "문너머에서 발소리가 들립니다.",
-                "단골손님을 부르는 중입니다.",
-            ],
-            json: [
-                "기억을 정리하는 중입니다.",
-                "계산기를 두드리는 중입니다."
-            ]
-            
-        };
+        const statusMessages = [
+            "오늘의 영업을 준비중입니다.",
+            "진열대를 정리하는 중입니다.",
+            "가게의 불을 켜는 중입니다.",
+            "먼지를 털어내고 있습니다.",
+            "거리의 소음을 모으는 중입니다.",
+            "손님들을 맞이할 준비 중입니다.",
+            "문너머에서 발소리가 들립니다.",
+            "단골손님을 부르는 중입니다.",
+            "기억을 정리하는 중입니다.",
+            "계산기를 두드리는 중입니다.",
+        ];
 
         const statusText = this.add
             .text(centerX, centerY + 100, "", {
@@ -54,14 +48,15 @@ export class Boot extends Scene {
                 color: "#aaaaaa",
             })
             .setOrigin(0.5);
+        
+            statusText.setText(Phaser.Math.RND.pick(statusMessages));
 
-        let lastFileKey = "";
-        this.load.on("fileprogress", (file: Phaser.Loader.File) => {
-            if (file.key === lastFileKey) return;
-            lastFileKey = file.key;
-            const variants = statusMessages[file.type] ?? statusMessages.image;
-            statusText.setText(Phaser.Math.RND.pick(variants));
-        });
+        // let lastFileKey = "";
+        // this.load.on("fileprogress", (file: Phaser.Loader.File) => {
+        //     if (file.key === lastFileKey) return;
+        //     lastFileKey = file.key;
+        //     statusText.setText(Phaser.Math.RND.pick(statusMessages));
+        // });
 
         this.loadAssets();
     }
@@ -95,7 +90,7 @@ export class Boot extends Scene {
 
     /** 씬 시작 */
     private sceneStart() {
-        // this.scene.start("MainMenu");
-        this.scene.start("Preloader");
+        this.scene.start("MainMenu");
+        // this.scene.start("Preloader");
     }
 }

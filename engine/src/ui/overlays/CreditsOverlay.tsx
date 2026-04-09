@@ -6,8 +6,8 @@ import { useOverlayStore } from "../../stores/useOverlayStore";
 
 // ── 크레딧 데이터 ─────────────────────────────────
 const CREDITS: { role: string; names: string[] }[] = [
-    { role: "개발", names: ["짱상희"] },
-    { role: "개발", names: ["흠수연"] },
+    { role: "개발", names: ["대장상희"] },
+    { role: "개발", names: ["빛수연"] },
     { role: "애니메이터", names: ["고트나경"] },
     { role: "애니메이터", names: ["갓은주"] },
 ];
